@@ -53,6 +53,7 @@ async function initUserPolymarketAccount(randomWallet: any, bot: Telegraf, ctx: 
 
     //exception
     if (!randomWallet || !creds || !proxyWallet) {
+        ctx.reply('Init failed, Please restart bot.');
         return;
     }
 
