@@ -10,6 +10,7 @@ const UserInfoSchema: Schema = new mongoose.Schema({
   clobApiKey: String,
   clobSecret: String,
   clobPassPhrase: String,
+  proxyWallet: String,
 });
 
 

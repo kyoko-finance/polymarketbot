@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
     "@polymarket/clob-client": "^4.8.1",
     "@polymarket/order-utils": "^2.1.0",
     "axios": "^1.7.3",

@@ -8,6 +8,15 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
 const chainId = Number(process.env.CHAIN_ID);
 
 // Initialization of a client that trades directly from an EOA
+export function initClobClient(privateKey: string) {
+    const wallet = new ethers.Wallet(privateKey, provider);
+    return new ClobClient(
+        host as string,
+        chainId,
+        wallet as ethers.Wallet | ethers.providers.JsonRpcSigner,
+    );
+}
+
 export function initClobClientEOA(privateKey: string) {
     const wallet = new ethers.Wallet(privateKey, provider);
     return new ClobClient(
@@ -16,6 +25,7 @@ export function initClobClientEOA(privateKey: string) {
         wallet as ethers.Wallet | ethers.providers.JsonRpcSigner,
     );
 }
+
 // Initialization of a client using a Polymarket Proxy associated with an Email/Magic account
 // 0x10093a40AeB323301fB0731230cA1b7ac075FF70
 export function initClobClientEmail(privateKey: string, proxyWallet: string) {
