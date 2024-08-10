@@ -1,0 +1,33 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "lib": ["ES2020"],
+    "declaration": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "alwaysStrict": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "strictPropertyInitialization": false,
+    "outDir": "dist",
+    "checkJs": true,
+    "allowJs": true,
+    "typeRoots": ["./node_modules/@types"],
+    "skipLibCheck": true
+	},
+	"ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    },
+    "transpileOnly": true,
+    "files": true
+  },
+  "include": [
+    "**/*.ts"
+, "withdraw.js"  ]
+}
