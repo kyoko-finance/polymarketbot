@@ -1,9 +1,10 @@
 import { Telegraf, Markup, Context } from 'telegraf'
 import { message } from 'telegraf/filters'
-import 'dotenv/config';
 import { DBConnect, getInstance } from './utils/db';
-import { welcome } from './welcome';
+import { welcome } from './pages/welcome';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
+import { actions } from './pages/actions';
+import 'dotenv/config';
 
 
 async function main() {
@@ -13,6 +14,8 @@ async function main() {
   const bot = new Telegraf(process.env.BOT_TOKEN as string)
 
   welcome(bot);
+  actions(bot);
+
 
   // bot.help((ctx) => ctx.reply('Send me a sticker'))
   // bot.on(message('sticker'), (ctx) => ctx.reply('👍'))

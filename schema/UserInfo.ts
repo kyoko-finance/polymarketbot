@@ -1,5 +1,16 @@
 import mongoose, { Schema } from 'mongoose'
 
+
+export interface IUserInfo {
+  _id: string;
+  userAddress: string;
+  userPrivatekey: string;
+  clobApiKey: string;
+  clobSecret: string;
+  clobPassPhrase: string;
+  proxyWallet: string;
+}
+
 const UserInfoSchema: Schema = new mongoose.Schema({
   _id: {
     type: String,
@@ -14,4 +25,4 @@ const UserInfoSchema: Schema = new mongoose.Schema({
 });
 
 
-export default mongoose.model('UserInfo', UserInfoSchema, 'UserInfo')
+export default mongoose.model<IUserInfo>('UserInfo', UserInfoSchema, 'UserInfo')

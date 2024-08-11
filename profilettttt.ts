@@ -10,7 +10,7 @@ async function getPortfolio() {
     console.log(portfolio.data);
 }
 
-// getPortfolio();
+getPortfolio();
 
 
 async function getPositions() {
@@ -20,7 +20,7 @@ async function getPositions() {
     console.log(data);
 }
 
-getPositions();
+// getPositions();
 
 
 async function getHistory() {
