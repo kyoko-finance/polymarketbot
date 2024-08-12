@@ -8,6 +8,7 @@ import {
 } from "../utils/constant";
 import { showProfile, updateProfile } from './profile';
 import { showHistory } from './history';
+import { showOpenOrders } from './openOrders';
 
 
 
@@ -28,7 +29,9 @@ function indexActions(bot: Telegraf) {
         ctx.reply("click positions")
     });
     bot.action(INDEX_PAGE_OPEN_ORDERS, async (ctx: Context) => {
-        ctx.reply("click open orders")
+        showOpenOrders(ctx);
+        ctx.deleteMessage();  // 删除当前的消息
+        ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
     });
     bot.action(INDEX_PAGE_HISTORY, async (ctx: Context) => {
         ctx.deleteMessage();  // 删除当前的消息

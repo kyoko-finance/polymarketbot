@@ -20,6 +20,10 @@ async function main() {
   // bot.help((ctx) => ctx.reply('Send me a sticker'))
   // bot.on(message('sticker'), (ctx) => ctx.reply('👍'))
   // bot.hears('hi', (ctx) => ctx.reply('Hey there'))
+  bot.on(message('text'), async (ctx) => {
+    // Using context shortcut
+    console.log("消息内容:", ctx.message.text)
+  })
 
   bot.launch()
   console.log('bot launch success')

@@ -14,6 +14,9 @@ import { showIndex } from "./index";
 
 export function welcome(bot: Telegraf) {
     bot.start(async (ctx) => {
+        const startPayload = ctx.startPayload; // 获取深链接中的参数部分
+        console.log(`Received start payload: ${startPayload}`);
+        console.log("在start处：", ctx);
         //查询
         var userInfo = await queryUserInfo(ctx.from.id.toString());
 

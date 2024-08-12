@@ -50,11 +50,38 @@ export function formatTimestampToString(timestamp: number): string {
 
 export function omitTxhash(tx: string): string {
     if (tx.length <= 16) {
-      return tx;
+        return tx;
     }
-  
+
     const firstPart = tx.slice(0, 8); // 取前8位
     const lastPart = tx.slice(-8);    // 取后8位
-  
+
     return `${firstPart}...${lastPart}`;
-  }
+}
+
+
+export function formatExpiration(timestamp: string): string {
+    const timeNumber = parseInt(timestamp, 10);
+
+    if (timeNumber === 0) {
+        return 'Until Cancelled';
+    }
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    const timeDifference = timeNumber - currentTime;
+
+    if (timeDifference <= 0) {
+        return 'Time already passed';
+    }
+
+    const hours = Math.floor(timeDifference / 3600);
+    const days = Math.floor(timeDifference / (24 * 3600));
+
+    if (days >= 1) {
+        return `In ${days} day${days > 1 ? 's' : ''}`;
+    } else if (hours >= 1) {
+        return `In ${hours} hour${hours > 1 ? 's' : ''}`;
+    } else {
+        return 'Less than an hour';
+    }
+}

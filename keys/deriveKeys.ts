@@ -16,7 +16,7 @@ async function deriveKeys() {
         wallet as ethers.Wallet | ethers.providers.JsonRpcSigner
     );
 
-    var nonce = 1000;
+    var nonce = 0;
 
     const creds = await clobClient.deriveApiKey(nonce); // nonce defaults to 0
     console.log(creds);

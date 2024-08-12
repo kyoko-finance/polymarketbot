@@ -1,7 +1,9 @@
 import { ClobClient } from "@polymarket/clob-client";
 import { SignatureType } from "@polymarket/order-utils";
+import { queryUserInfo } from "./utils/db";
 import { ethers } from "ethers";
 import 'dotenv/config';
+import UserInfo, { IUserInfo } from './schema/UserInfo';
 
 var host = process.env.CLOB_HOST;
 const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
@@ -42,18 +44,22 @@ export function initClobClientEmail(privateKey: string, proxyWallet: string) {
 
 // Initialization of a client using a Polymarket Proxy Wallet associated with a Browser Wallet(Metamask, Coinbase Wallet)
 // 0x10093a40AeB323301fB0731230cA1b7ac075FF70
-export function initClobClientGnosis(privateKey: string, proxyWallet: string) {
-    const wallet = new ethers.Wallet(privateKey, provider);
+export async function initClobClientGnosis(id: string) {
+    var userInfo: IUserInfo | undefined = await queryUserInfo(id);
+    if (!userInfo) {
+        return
+    }
+    const wallet = new ethers.Wallet(userInfo.userPrivatekey, provider);
     return new ClobClient(
         host as string,
         chainId,
         wallet as ethers.Wallet | ethers.providers.JsonRpcSigner,
         {
-            key: process.env.CLOB_API_KEY as string,
-            secret: process.env.CLOB_SECRET as string,
-            passphrase: process.env.CLOB_PASS_PHRASE as string
+            key: userInfo.clobApiKey as string,
+            secret: userInfo.clobSecret as string,
+            passphrase: userInfo.clobPassPhrase as string
         }, // creds
         SignatureType.POLY_GNOSIS_SAFE,
-        proxyWallet
+        userInfo.proxyWallet
     );
 }
