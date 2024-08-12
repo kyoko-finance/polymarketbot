@@ -5,7 +5,8 @@ import 'dotenv/config';
 import UserInfo, { IUserInfo } from "../schema/UserInfo";
 import axios from "axios";
 import { formatUSDC, formatUSDCToString } from "../utils/utils";
-import { PROFILE_REFRESH_ASSETS, PROFILE_BACK } from "../utils/constant";
+import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX } from "../utils/constant";
+import { queryUserInfo } from "../utils/db";
 
 
 
@@ -64,17 +65,8 @@ function getProfileMenu() {
             callback_data: PROFILE_REFRESH_ASSETS
         }
     ], [
-        Markup.button.callback('↩︎ Back', PROFILE_BACK),
+        Markup.button.callback('↩︎ Back', BACK_TO_INDEX),
     ]]
-}
-
-async function queryUserInfo(id: string) {
-    var userInfo: IUserInfo | null = await UserInfo.findById(id);
-    if (userInfo == null) {
-        return;
-    }
-    console.log(userInfo)
-    return userInfo;
 }
 
 

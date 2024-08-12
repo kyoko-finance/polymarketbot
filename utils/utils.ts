@@ -25,3 +25,36 @@ export function formatUSDCToString(usdcAmount: BigNumber) {
     // console.log('formatUSDCToString:', numberValue)
     return numberValue;
 }
+
+export function formatTimestampToString(timestamp: number): string {
+    const now = Math.floor(Date.now() / 1000); // 当前时间的秒级时间戳
+    const diffInSeconds = now - timestamp; // 时间差（秒）
+
+    if (diffInSeconds < 60) {
+        return 'less than a minute ago';
+    } else if (diffInSeconds < 3600) { // Less than 1 hour
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < 86400) { // Less than 1 day
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < 31536000) { // Less than 1 year
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else {
+        const years = Math.floor(diffInSeconds / 31536000);
+        return `${years} year${years > 1 ? 's' : ''} ago`;
+    }
+}
+
+
+export function omitTxhash(tx: string): string {
+    if (tx.length <= 16) {
+      return tx;
+    }
+  
+    const firstPart = tx.slice(0, 8); // 取前8位
+    const lastPart = tx.slice(-8);    // 取后8位
+  
+    return `${firstPart}...${lastPart}`;
+  }

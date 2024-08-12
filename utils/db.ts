@@ -1,4 +1,5 @@
 import mongoose, { Mongoose } from 'mongoose';
+import UserInfo, { IUserInfo } from '../schema/UserInfo';
 
 // 声明一个变量来存储 Mongoose 实例
 let DBInstance: Mongoose | null = null;
@@ -29,3 +30,12 @@ export const DBConnect = async (): Promise<Mongoose> => {
 export const getInstance = (): Mongoose | null => {
     return DBInstance;
 };
+
+export async function queryUserInfo(id: string) {
+    var userInfo: IUserInfo | null = await UserInfo.findById(id);
+    if (userInfo == null) {
+        return;
+    }
+    console.log("queryUserInfo:", userInfo)
+    return userInfo;
+}
