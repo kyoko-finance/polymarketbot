@@ -23,3 +23,10 @@ export const BACK_TO_INDEX = 'back_to_index';
 export const OPEN_ORDERS_REFRESH = 'open_orders_refresh';
 
 export const OPEN_ORDERS_BACK_TO_INDEX = 'open_orders_back_to_index';
+
+
+export const MARKETS_CATEGORY_PREFIX = 'markets_category_prefix_';
+
+export const MARKETS_TOPIC_PREFIX = 'markets_topic_prefix_';
+
+export const MARKETS_BACK_TO_CATEGORY = 'markets_back_to_category';

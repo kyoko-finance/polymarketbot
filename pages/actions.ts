@@ -4,13 +4,14 @@ import 'dotenv/config';
 import {
     WELCOME_DISMISS_GENERATE_WALLET, INDEX_PAGE_MARKETS, INDEX_PAGE_POSITIONS,
     INDEX_PAGE_OPEN_ORDERS, INDEX_PAGE_HISTORY, INDEX_PAGE_PROFILE,
-    INDEX_PAGE_DISMISS,  PROFILE_REFRESH_ASSETS, BACK_TO_INDEX,
+    INDEX_PAGE_DISMISS, PROFILE_REFRESH_ASSETS, BACK_TO_INDEX,
     OPEN_ORDERS_REFRESH, OPEN_ORDERS_BACK_TO_INDEX
 } from "../utils/constant";
 import { showProfile, updateProfile } from './profile';
 import { showHistory } from './history';
 import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from './openOrders';
 import { showPositions } from './positions';
+import { showMarket } from './markets';
 
 
 
@@ -31,7 +32,10 @@ function indexActions(bot: Telegraf) {
         ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
     });
     bot.action(INDEX_PAGE_MARKETS, async (ctx: Context) => {
-        ctx.reply("click markets")
+        showMarket(bot, ctx);
+        ctx.deleteMessage();  // 删除当前的消息
+        ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
+
     });
     bot.action(INDEX_PAGE_POSITIONS, async (ctx: Context) => {
         showPositions(ctx);
@@ -70,8 +74,11 @@ function openOrdersActions(bot: Telegraf) {
         updateOpenOrders(ctx);
     });
     bot.action(OPEN_ORDERS_BACK_TO_INDEX, async (ctx: Context) => {
-        ctx.deleteMessage();  // 删除当前的消息
-        ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
-        deleteOpenOrderMap(ctx.from!.id.toString());
+        try {
+            ctx.deleteMessage();  // 删除当前的消息
+            ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
+            deleteOpenOrderMap(ctx.from!.id.toString());
+        } catch (error) {
+        }
     });
 }

@@ -1,17 +1,29 @@
-import { Telegraf, Markup, Context } from 'telegraf'
+import { Telegraf, Markup, Context, session } from 'telegraf'
 import { message } from 'telegraf/filters'
 import { DBConnect, getInstance } from './utils/db';
 import { welcome } from './pages/welcome';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { actions } from './pages/actions';
 import 'dotenv/config';
+import { ICategory } from './pages/markets';
 
+interface SessionData {
+  cateogry: ICategory[];
+}
+
+export interface MyContext extends Context {
+	session?: SessionData;
+}
 
 async function main() {
   //connect database
   await DBConnect();
 
-  const bot = new Telegraf(process.env.BOT_TOKEN as string)
+  const bot = new Telegraf<MyContext>(process.env.BOT_TOKEN as string)
+
+
+  // 设置 session 中间件
+  bot.use(session());
 
   welcome(bot);
   actions(bot);
@@ -32,23 +44,5 @@ async function main() {
   process.once('SIGINT', () => bot.stop('SIGINT'))
   process.once('SIGTERM', () => bot.stop('SIGTERM'))
 }
-
-
-function getIndexMenu() {
-  return [[
-    {
-      text: "第一行第一个",
-      callback_data: "fist_1_1"
-    },
-    {
-      text: "第一行第二个",
-      callback_data: "fist_1_2"
-    }
-  ], [
-    Markup.button.callback('× Dismiss Message-1', 'dismiss_generate_wallet_1'),
-    Markup.button.callback('× Dismiss Message-2', 'dismiss_generate_wallet_2')
-  ]]
-}
-
 
 main();

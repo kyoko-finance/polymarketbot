@@ -6,8 +6,8 @@ import axios from "axios";
 
 async function getCategory() {
     const category = await axios.get('https://polymarket.com/api/tags/filtered?tag=100221&status=active');
-    console.log(`category: `);
-    console.log(category.data);
+    console.log(`getCategory: ${category.data}`);
+    return category.data;
 }
 
 getCategory();
