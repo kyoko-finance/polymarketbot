@@ -10,6 +10,7 @@ import {
 import { showProfile, updateProfile } from './profile';
 import { showHistory } from './history';
 import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from './openOrders';
+import { showPositions } from './positions';
 
 
 
@@ -33,7 +34,9 @@ function indexActions(bot: Telegraf) {
         ctx.reply("click markets")
     });
     bot.action(INDEX_PAGE_POSITIONS, async (ctx: Context) => {
-        ctx.reply("click positions")
+        showPositions(ctx);
+        ctx.deleteMessage();  // 删除当前的消息
+        ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
     });
     bot.action(INDEX_PAGE_OPEN_ORDERS, async (ctx: Context) => {
         showOpenOrders(ctx);
