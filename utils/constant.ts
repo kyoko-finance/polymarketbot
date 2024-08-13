@@ -19,3 +19,7 @@ export const INDEX_PAGE_DISMISS = 'index_page_dismiss';
 export const PROFILE_REFRESH_ASSETS = 'profile_refresh_assets';
 
 export const BACK_TO_INDEX = 'back_to_index';
+
+export const OPEN_ORDERS_REFRESH = 'open_orders_refresh';
+
+export const OPEN_ORDERS_BACK_TO_INDEX = 'open_orders_back_to_index';

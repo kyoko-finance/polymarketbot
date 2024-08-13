@@ -9,14 +9,21 @@ import { createProxyWallet } from "../generateProxyWallet";
 import { User } from "@telegraf/types";
 import { WELCOME_DISMISS_GENERATE_WALLET } from "../utils/constant";
 import { showIndex } from "./index";
+import { deleteStartMessageAndCancelOrder } from "./openOrders";
 
 
 
 export function welcome(bot: Telegraf) {
     bot.start(async (ctx) => {
-        const startPayload = ctx.startPayload; // 获取深链接中的参数部分
-        console.log(`Received start payload: ${startPayload}`);
-        console.log("在start处：", ctx);
+        const payload = ctx.payload; // 获取深链接中的 payload
+        if (payload) {
+            console.log(`Received payload: ${payload}`);
+            var handle = handlePayload(ctx, payload);
+            if(handle) {
+                return;
+            }
+        }
+
         //查询
         var userInfo = await queryUserInfo(ctx.from.id.toString());
 
@@ -32,6 +39,21 @@ export function welcome(bot: Telegraf) {
     })
 }
 
+function handlePayload(ctx: Context, payload: string) {
+    const parts = payload.split('-', 2); // 以第一个 - 进行分割，限制分割次数为2
+    if(parts.length <= 1) {
+        return;
+    }
+    var action = parts[0];
+    var params = parts[1];
+    if(action === 'co') {
+        // console.log("动作:", action);
+        // console.log("参数:", params);
+        deleteStartMessageAndCancelOrder(ctx, params);
+        return true;
+    }
+    return false;
+}
 
 
 async function initUserPolymarketAccount(randomWallet: any, bot: Telegraf, ctx: Context, telegramUserInfo: User) {

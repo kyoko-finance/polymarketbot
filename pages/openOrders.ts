@@ -1,24 +1,50 @@
 import { Context, Telegraf, Markup } from "telegraf";
-import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
+import { ExtraReplyMessage, ExtraEditMessageText } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import { initClobClientGnosis } from "../clobclientInit";
-import { formatExpiration, formatTimestampToString, omitTxhash } from "../utils/utils";
-import { BACK_TO_INDEX } from "../utils/constant";
+import { formatExpiration } from "../utils/utils";
+import { OPEN_ORDERS_REFRESH, BACK_TO_INDEX } from "../utils/constant";
 import axios from "axios";
 
-
+var openOrderMap: Map<string, IOpenOrder[]> = new Map();
 
 export async function showOpenOrders(ctx: Context) {
     var openOrdersMsg = await queryOpenOrdersShowMsg(ctx);
     ctx.replyWithMarkdownV2(openOrdersMsg as string, { reply_markup: { inline_keyboard: getOpenOrdersMenu() }, disable_web_page_preview: true } as ExtraReplyMessage);
 }
 
+export async function updateOpenOrders(ctx: Context) {
+    var openOrdersMsg = await queryOpenOrdersShowMsg(ctx);
+
+    //更新内容
+    ctx.editMessageText(
+        openOrdersMsg as string,
+        {
+            parse_mode: 'MarkdownV2',
+            disable_web_page_preview: true,
+            reply_markup: {
+                inline_keyboard: getOpenOrdersMenu()
+            }
+        } as ExtraEditMessageText
+    ).catch((error) => {
+        console.log(error);
+    })
+}
+
 async function queryOpenOrdersShowMsg(ctx: Context) {
-    var openOrdersHeader = '*Open orders*\n'
     var openOrderList: IOpenOrder[] | null = await getActiveOrders(ctx.from!.id.toString());
+    return await getShowMsg(ctx, openOrderList);
+}
+
+async function getShowMsg(ctx: Context, openOrderList: IOpenOrder[] | null) {
+    var openOrdersHeader = '*Open orders*\n'
     if (!openOrderList || openOrderList.length == 0) {
         return openOrdersHeader + "\nNo open orders data";
     }
+
+    //缓存订单列表
+    openOrderMap.set(ctx.from!.id.toString(), openOrderList);
+
     var showMsg: string = '';
     for (var i = 0; i < openOrderList.length; i++) {
         var element = openOrderList[i];
@@ -30,9 +56,13 @@ async function queryOpenOrdersShowMsg(ctx: Context) {
 
         var market: IMarket[] = await getMarketApi(element.market);
 
+        var cancelOrderUrl = `https://t.me/polymarket_kbot?start=co-${element.id.substring(2).slice(0, -5)}`
+        console.log('cancelOrderUrl:', cancelOrderUrl);
+
         showMsg += `\n• Market: [${market[0].question}](https://polymarket.com/event/${market[0].event_slug}/${market[0].market_slug}) 📈`
         showMsg += `\n• Side: ${element.side}`;
         showMsg += `\n• Outcome: ${element.outcome}`
+        showMsg += `\n• Operation: [\\[Cancel\\]](${cancelOrderUrl})`
         showMsg += `\n• Price: ${Math.round(parseFloat(element.price) * 100).toString().replace('.', '\\.')}¢`
         showMsg += `\n• Filled: ${element.size_matched} / ${element.original_size}`
         showMsg += `\n• Total: $${total.toString().replace('.', '\\.')}`
@@ -45,8 +75,57 @@ async function queryOpenOrdersShowMsg(ctx: Context) {
 
 function getOpenOrdersMenu() {
     return [[
+        {
+            text: "Refresh",
+            callback_data: OPEN_ORDERS_REFRESH
+        }
+    ], [
         Markup.button.callback('↩︎ Back', BACK_TO_INDEX),
     ]]
+}
+
+
+export async function deleteStartMessageAndCancelOrder(ctx: Context, prefixOrderId: string) {
+    var orderList: IOpenOrder[] | undefined = openOrderMap.get(ctx.from!.id.toString());
+    if(!orderList || orderList.length == 0) {
+        return;
+    }
+    var orderId: string = '';
+    for (var i = 0; i < orderList.length; i++) {
+        if (orderList[i].id.startsWith('0x' + prefixOrderId)) {
+            orderId = orderList[i].id;
+        }
+    }
+    if(orderId.length == 0) {
+        return;
+    }
+    var success = await cancelOrder(ctx, orderId);
+    ctx.deleteMessage();  // 删除当前的消息
+    // ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
+    if(success) {
+        ctx.reply('✅ This open order delete success. Click refresh button view the updated list.')
+    }
+}
+
+export async function deleteOpenOrderMap(id: string) {
+    openOrderMap.delete(id);
+}
+
+export async function cancelOrder(ctx: Context, orderId: string) {
+    const clobClient = await initClobClientGnosis(ctx.from!.id.toString());
+    if (!clobClient) {
+        return false;
+    }
+    const resp = await clobClient.cancelOrder({
+        orderID:
+            orderId,
+    });
+    // console.log('cancelOrder:', resp);
+    if(resp && resp.canceled[0] === orderId) {
+        //success
+        return true;
+    }
+    return false;
 }
 
 async function getMarketApi(marketId: string) {
