@@ -79,7 +79,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         }
         eventMessage += `\n`;
     }
-    return eventMessage;
+    return eventMessage.replace(/\+/g, '\\.');
 }
 
 function eventActions(bot: Telegraf, categoryLabel: string, categorySlug: string) {
