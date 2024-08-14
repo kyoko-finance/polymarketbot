@@ -7,7 +7,7 @@ export function showIndex(ctx: Context) {
     var indexMsg = `
     *Polymarket*
 Your first polymarket trading bot
-———————————————
+───────────────────
 📖 [Docs](${process.env.DOCS})
 💬 [Official Chat](${process.env.WEBSITE})
 🌍 [Website](${process.env.WEBSITE})

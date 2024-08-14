@@ -85,3 +85,16 @@ export function formatExpiration(timestamp: string): string {
         return 'Less than an hour';
     }
 }
+
+
+export function formatVolume(volume: number): string {
+    if (volume >= 1_000_000_000) {
+        return (volume / 1_000_000_000).toFixed(1) + 'b';
+    } else if (volume >= 1_000_000) {
+        return (volume / 1_000_000).toFixed(1) + 'm';
+    } else if (volume >= 1_000) {
+        return (volume / 1_000).toFixed(1) + 'k';
+    } else {
+        return volume.toFixed(1);
+    }
+}
