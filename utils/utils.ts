@@ -1,4 +1,5 @@
 import { BigNumber, ethers, Wallet } from 'ethers';
+import { IMarket } from '../pages/eventList';
 
 
 export function generateRandomPrivateKey() {
@@ -88,7 +89,7 @@ export function formatExpiration(timestamp: string): string {
 
 
 export function formatVolume(volume: number): string {
-    console.log("volume:", volume);
+    // console.log("volume:", volume);
     try {
         if(!volume) {
             return '\\-'
@@ -106,4 +107,17 @@ export function formatVolume(volume: number): string {
         return volume.toString();
     }
     
+}
+
+/**
+ * 对marketList按照bestAsk降序排列，如果相等则按照volume降序排列
+ * @param marketList 
+ */
+export function sortMarket(marketList: IMarket[]) {
+    marketList.sort((a, b) => {
+        if (b.bestAsk !== a.bestAsk) {
+            return b.bestAsk - a.bestAsk;
+        }
+        return parseFloat(b.volume) - parseFloat(a.volume);
+    })
 }

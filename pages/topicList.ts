@@ -26,7 +26,7 @@ export async function showTopics(bot: Telegraf, ctx: Context, categoryLabel: str
             }
         } as ExtraEditMessageText
     ).catch((error) => {
-        console.log(error);
+        console.log('error:',error);
     })
 }
 
@@ -59,6 +59,6 @@ function topicActions(bot: Telegraf, toplicsList: ICategory[], categoryLabel: st
 
 async function getTopicsApi(categorySlug: string) {
     const market = await axios.get(`https://polymarket.com/api/tags/filteredBySlug?tag=${categorySlug}&status=active`);
-    console.log(`getTopicsApi: `, market.data);
+    // console.log(`getTopicsApi: `, market.data);
     return market.data as ICategory[];
 }

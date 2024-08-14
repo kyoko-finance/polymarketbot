@@ -17,7 +17,7 @@ async function getCategory() {
     // console.log(list[0].markets[0]);
     sortMarket(sampleMarketList);
     for(var i=0;i<sampleMarketList.length;i++) {
-        console.log(sampleMarketList[i].groupItemTitle,",", sampleMarketList[i].bestAsk, ",", sampleMarketList[i].liquidity, ",", sampleMarketList[i].volume);
+        // console.log(sampleMarketList[i].groupItemTitle,",", sampleMarketList[i].bestAsk, ",", sampleMarketList[i].liquidity, ",", sampleMarketList[i].volume);
     }
 }
 

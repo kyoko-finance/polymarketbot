@@ -10,6 +10,8 @@ import { User } from "@telegraf/types";
 import { WELCOME_DISMISS_GENERATE_WALLET } from "../utils/constant";
 import { showIndex } from "./index";
 import { deleteStartMessageAndCancelOrder } from "./openOrders";
+import { showEventDetail } from "./eventDetail";
+import { MyContext } from "../index";
 
 
 
@@ -46,10 +48,14 @@ function handlePayload(ctx: Context, payload: string) {
     }
     var action = parts[0];
     var params = parts[1];
-    if(action === 'co') {
+    if(action === 'co') {//co代表cancelOrder
         // console.log("动作:", action);
         // console.log("参数:", params);
         deleteStartMessageAndCancelOrder(ctx, params);
+        return true;
+    }
+    if(action == 'ed') {//et代表eventDetail
+        showEventDetail(ctx, params)
         return true;
     }
     return false;

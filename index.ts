@@ -5,14 +5,15 @@ import { welcome } from './pages/welcome';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { actions } from './pages/actions';
 import 'dotenv/config';
-import { ICategory } from './pages/markets';
+import { IEvent } from './pages/eventList';
+
 
 interface SessionData {
-  cateogry: ICategory[];
+  selectedEventList: IEvent[];
 }
 
 export interface MyContext extends Context {
-	session?: SessionData;
+  session?: SessionData;
 }
 
 async function main() {
