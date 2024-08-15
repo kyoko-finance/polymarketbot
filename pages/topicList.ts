@@ -9,7 +9,7 @@ import { showEvent } from "./eventList";
 
 
 export async function showTopics(bot: Telegraf, ctx: Context, categoryLabel: string, categorySlug: string) {
-    var topicMessage = `*Markets:*\nYou have selected category:*${categorySlug.replace('-', '\\-')}*\nPlease select your interested topic:`;
+    var topicMessage = `*Markets:*\nYou have selected category: *${categorySlug.replace('-', '\\-')}*\nPlease select your interested topic: `;
     var toplicsList: ICategory[] = await getTopicsApi(categorySlug);
     if (!toplicsList || toplicsList.length == 0) {
         ctx.reply("No available topic.")

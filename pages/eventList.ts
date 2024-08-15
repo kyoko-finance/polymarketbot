@@ -32,13 +32,12 @@ export async function showEvent(bot: Telegraf, ctx: MyContext, topicLabel: strin
 }
 
 function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: string, topicLabel: string) {
+    console.log("打印session:", ctx.session);
     var eventMessage = `*Markets:*\n*${categoryLabel}*\\-*${topicLabel}*\n`;
 
-    // ctx.session = {
-    //     selectedEventList: eventList,
-    //     ...ctx.session
-    // }
-    // ctx.session.selectedEventList = eventList;
+    // ctx.session ??= { selectedEventList: [], messageCount: 0 };
+    ctx.session.selectedEventList = eventList;
+
 
     if (!eventList || eventList.length == 0) {
         return eventMessage + "\nNo open orders data";
@@ -48,10 +47,12 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
 
         if(i == 0) {
             // console.log(element);
+            console.log('第一个的id是：', element.id, ",", element.title);
         }
 
         //ed表示event detail
         var cancelOrderUrl = `https://t.me/polymarket_kbot?start=ed-${element.id}`
+    
 
         eventMessage += `\n• Title: *${element.title.replace(/\./g, '\\.').replace(/\-/g, '\\.')} 📈*\n`
         let currentMarketList: IMarket[] = element.markets;

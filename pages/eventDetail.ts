@@ -9,12 +9,13 @@ import { MyContext } from "../index";
 
 
 export function showEventDetail(ctx: MyContext, id: string) {
-    console.log('id:', id);
-    console.log("打印session:", ctx.session)
-    if(!ctx.session) {
+    console.log('event detail id:', id);
+    if (!ctx.session) {
         return;
     }
     var eventList: IEvent[] | undefined = ctx.session.selectedEventList;
+    console.log('session中的eventList length:', eventList.length);
+
     if (!eventList || eventList.length == 0) {
         return;
     }
@@ -24,27 +25,30 @@ export function showEventDetail(ctx: MyContext, id: string) {
             event = element;
         }
     })
-    console.log('开始构2222', event?.commentCount)
     if (!event) {
         ctx.reply('🥲can not find event.')
         return;
     }
-    console.log('开始构建消息')
     var eventDetailMsg = '';
 
     // var cancelOrderUrl = `https://t.me/polymarket_kbot?start=dt-${event.id.substring(2).slice(0, -5)}`
 
+    eventDetailMsg += `*Event details: *\n\n`;
     eventDetailMsg += `\n• Title: *${event.title.replace(/\./g, '\\.').replace(/\-/g, '\\.')} 📈*\n`
-    let currentMarketList: IMarket[] = event.markets;
-    sortMarket(currentMarketList);
-    let maxLength = currentMarketList.length > 3 ? 3 : currentMarketList.length;
-    for (let j = 0; j < maxLength; j++) {//只需要列出前3个
-        let market = currentMarketList[j];
-        eventDetailMsg += `   *${(j + 1) + '\\.' + market.groupItemTitle.replace(/\./g, '\\.').replace(/\-/g, '\\.')}*    ${Math.round(market.bestAsk * 100)}%    Yes  No\n`;
-    }
     eventDetailMsg += `• Bet: ${formatVolume(event.volume).replace('.', '\\.')}`;
-    eventDetailMsg += `\n• volume24hr: ${formatVolume(event.volume24hr).replace('.', '\\.')}`
-    eventDetailMsg += `\n• commentCount: ${event.commentCount}`
+    eventDetailMsg += `\n• volume24hr: ${formatVolume(event.volume24hr).replace('.', '\\.')}`;
+    eventDetailMsg += `\n• commentCount: ${event.commentCount}\n\n`;
+    let currentMarketList: IMarket[] = event.markets;
+    if (currentMarketList && currentMarketList.length > 1) {
+        sortMarket(currentMarketList);
+        let maxLength = currentMarketList.length > 3 ? 3 : currentMarketList.length;
+        for (let j = 0; j < maxLength; j++) {//只需要列出前3个
+            let market = currentMarketList[j];
+            eventDetailMsg += `*${(j + 1) + '\\.' + market.groupItemTitle.replace(/\./g, '\\.').replace(/\-/g, '\\.')}*    ${Math.round(market.bestAsk * 100)}%      Yes       No\n\n`;
+        }
+    } else {
+        eventDetailMsg += `Yes      No`;
+    }
     eventDetailMsg += `\n`;
 
     var buttons = getEventDetailMenu();
@@ -52,8 +56,8 @@ export function showEventDetail(ctx: MyContext, id: string) {
 }
 
 function getEventDetailMenu() {
-    const buttons = [
+    const buttons = [[
         Markup.button.callback('× Dismiss Message', WELCOME_DISMISS_GENERATE_WALLET)
-    ];
+    ]];
     return buttons;
 }

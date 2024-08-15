@@ -9,7 +9,7 @@ import { showTopics } from "./topicList";
 var categoryList: ICategory[];
 
 export async function showMarket(bot: Telegraf, ctx: Context) {
-    var marketMessage = `*Markets:*\nPlease select your interested category:`;
+    var marketMessage = `*Markets:*\nPlease select your interested category: `;
     categoryList = await getCategoryApi();
     if (!categoryList || categoryList.length == 0) {
         ctx.reply("No available category.")
@@ -64,7 +64,7 @@ function categoryActions(bot: Telegraf, categoryList: ICategory[]) {
 
 
 export async function updateMarket(bot: Telegraf, ctx: Context) {
-    var marketMessage = `*Markets:*\nPlease select your interested category:`;
+    var marketMessage = `*Markets:*\nPlease select your interested category: `;
     if (!categoryList || categoryList.length == 0) {
         ctx.reply("No available category.")
         return;

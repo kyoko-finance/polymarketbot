@@ -5,17 +5,17 @@ import axios from "axios";
 
 
 async function getCategory() {
-    const category = await axios.get('https://gamma-api.polymarket.com/events?limit=20&active=true&archived=false&tag_slug=us-election&closed=false&order=volume24hr&ascending=false&offset=0');
+    const category = await axios.get('https://gamma-api.polymarket.com/events?limit=10&active=true&archived=false&tag_slug=us-election&closed=false&order=volume24hr&ascending=false&offset=0');
     console.log(`category: `);
     var list: IEvent[] = category.data;
     // console.log(list);
     // console.log("##########")
     // console.log(list[1].markets.length);
-    console.log(list);
+    console.log(list[0].markets[0]);
     var sampleMarketList: IMarket[] = list[0].markets;
     console.log("22222222");
     // console.log(list[0].markets[0]);
-    sortMarket(sampleMarketList);
+    // sortMarket(sampleMarketList);
     for(var i=0;i<sampleMarketList.length;i++) {
         // console.log(sampleMarketList[i].groupItemTitle,",", sampleMarketList[i].bestAsk, ",", sampleMarketList[i].liquidity, ",", sampleMarketList[i].volume);
     }

@@ -25,6 +25,8 @@ export function welcome(bot: Telegraf) {
                 return;
             }
         }
+        
+        
 
         //查询
         var userInfo = await queryUserInfo(ctx.from.id.toString());

@@ -25,6 +25,10 @@ async function main() {
 
   // 设置 session 中间件
   bot.use(session());
+  bot.use((ctx, next) => {
+    ctx.session ??= { selectedEventList: [] };
+    next();
+  })
 
   welcome(bot);
   actions(bot);
@@ -33,10 +37,12 @@ async function main() {
   // bot.help((ctx) => ctx.reply('Send me a sticker'))
   // bot.on(message('sticker'), (ctx) => ctx.reply('👍'))
   // bot.hears('hi', (ctx) => ctx.reply('Hey there'))
-  bot.on(message('text'), async (ctx) => {
-    // Using context shortcut
-    console.log("消息内容:", ctx.message.text)
-  })
+  // bot.on(message('text'), async (ctx, next) => {
+  //   // Using context shortcut
+  //   // console.log("消息内容:", ctx.message.text)
+  //   console.log("on session:", ctx.session);
+  //   next();
+  // })
 
   bot.launch()
   console.log('bot launch success')
