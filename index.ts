@@ -5,11 +5,15 @@ import { welcome } from './pages/welcome';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { actions } from './pages/actions';
 import 'dotenv/config';
-import { IEvent } from './pages/eventList';
+import { IEvent, IMarket } from './pages/eventList';
 
 
 interface SessionData {
   selectedEventList: IEvent[];
+  selectedEvent: IEvent;
+  selectedMarket: IMarket;
+  selectedYesOrNo: string;
+  selectedBuyOrSell: string | undefined;
 }
 
 export interface MyContext extends Context {

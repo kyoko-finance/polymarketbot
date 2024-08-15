@@ -32,3 +32,12 @@ export const MARKETS_TOPIC_PREFIX = 'markets_topic_prefix_';
 export const MARKETS_BACK_TO_CATEGORY = 'markets_back_to_category';
 
 export const MARKETS_BACK_TO_TOPIC = 'markets_back_to_topic';
+
+
+export const MARKETS_ORDER_OP_BUY = 'markets_order_op_buy';
+
+export const MARKETS_ORDER_OP_SELL = 'markets_order_op_sell';
+
+export const MARKETS_ORDER_OP_MARKET = 'markets_order_op_market';
+
+export const MARKETS_ORDER_OP_LIMIT = 'markets_order_op_limit';

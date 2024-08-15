@@ -64,7 +64,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
             let maxLength = currentMarketList.length > 3 ? 3 : currentMarketList.length;
             for (let j = 0; j < maxLength; j++) {//只需要列出前3个
                 let market = currentMarketList[j];
-                eventMessage += `   *${(j + 1) + '\\.' + market.groupItemTitle.replace(/\./g, '\\.').replace(/\-/g, '\\.')}*    ${Math.round(market.bestAsk * 100)}%    Yes  No\n`;
+                eventMessage += `   *${(j + 1) + '\\. ' + market.groupItemTitle.replace(/\./g, '\\.').replace(/\-/g, '\\.')}*    ${Math.round(market.bestAsk * 100)}%    Yes  No\n`;
             }
         }
 

@@ -22,9 +22,14 @@ export async function showMarket(bot: Telegraf, ctx: Context) {
 
 
 async function getCategoryApi() {
-    const category = await axios.get('https://polymarket.com/api/tags/filtered?tag=100221&status=active');
-    // console.log(`getCategory:`, category.data);
-    return category.data as ICategory[];
+    try {
+        const category = await axios.get('https://polymarket.com/api/tags/filtered?tag=100221&status=active');
+        // console.log(`getCategory:`, category.data);
+        return category.data as ICategory[];
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
 }
 
 
