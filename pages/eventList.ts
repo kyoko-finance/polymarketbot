@@ -2,7 +2,7 @@ import { Context, Telegraf, Markup, session } from "telegraf";
 import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram";
 import { MARKETS_BACK_TO_TOPIC } from "../utils/constant";
 import { ExtraEditMessageText } from "telegraf/typings/telegram-types";
-import { formatVolume, sortMarket } from "../utils/utils";
+import { formatString, formatVolume, sortMarket } from "../utils/utils";
 import axios from "axios";
 import { showTopics } from "./topicList";
 import { MyContext } from "../index";
@@ -54,7 +54,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         var cancelOrderUrl = `https://t.me/polymarket_kbot?start=ed-${element.id}`
     
 
-        eventMessage += `\n• Title: *${element.title.replace(/\./g, '\\.').replace(/\-/g, '\\.')} 📈*\n`
+        eventMessage += `\n• Title: *${formatString(element.title)} 📈*\n`
         let currentMarketList: IMarket[] = element.markets;
         if (!currentMarketList || currentMarketList.length == 0) {
             continue;
@@ -64,12 +64,12 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
             let maxLength = currentMarketList.length > 3 ? 3 : currentMarketList.length;
             for (let j = 0; j < maxLength; j++) {//只需要列出前3个
                 let market = currentMarketList[j];
-                eventMessage += `   *${(j + 1) + '\\. ' + market.groupItemTitle.replace(/\./g, '\\.').replace(/\-/g, '\\.')}*    ${Math.round(market.bestAsk * 100)}%    Yes  No\n`;
+                eventMessage += `   *${(j + 1) + '\\. ' + formatString(market.groupItemTitle)}*    ${Math.round(market.bestAsk * 100)}%    Yes  No\n`;
             }
         }
 
-        var volumeStr = element.volume ? formatVolume(element.volume).replace('.', '\\.') : '-';
-        var volume24hrStr = element.volume24hr ? formatVolume(element.volume24hr).replace('.', '\\.') : '-';
+        var volumeStr = element.volume ? formatString(formatVolume(element.volume)) : '-';
+        var volume24hrStr = element.volume24hr ? formatString(formatVolume(element.volume24hr)) : '-';
 
         eventMessage += `• Bet: ${volumeStr}`;
         eventMessage += `\n• volume24hr: ${volume24hrStr}`
@@ -80,7 +80,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         }
         eventMessage += `\n`;
     }
-    return eventMessage.replace(/\+/g, '\\.');
+    return eventMessage.replace(/\+/g, '\\+');
 }
 
 function eventActions(bot: Telegraf, categoryLabel: string, categorySlug: string) {

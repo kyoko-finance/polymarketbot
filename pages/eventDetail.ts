@@ -2,7 +2,7 @@ import { Context, Telegraf, Markup } from "telegraf";
 import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram";
 import { MARKETS_BACK_TO_TOPIC, WELCOME_DISMISS_GENERATE_WALLET } from "../utils/constant";
 import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types";
-import { formatVolume, sortMarket } from "../utils/utils";
+import { formatString, formatVolume, sortMarket } from "../utils/utils";
 import { IEvent, IMarket } from "./eventList";
 import { MyContext } from "../index";
 
@@ -34,9 +34,9 @@ export function showEventDetail(ctx: MyContext, id: string) {
     let eventDetailMsg = '';
 
     eventDetailMsg += `*Event details: *\n`;
-    eventDetailMsg += `\n• Title: *${event.title.replace(/\./g, '\\.').replace(/\-/g, '\\.')} 📈*\n`
-    eventDetailMsg += `• Bet: ${formatVolume(event.volume).replace('.', '\\.')}`;
-    eventDetailMsg += `\n• volume24hr: ${formatVolume(event.volume24hr).replace('.', '\\.')}`;
+    eventDetailMsg += `\n• Title: *${formatString(event.title)} 📈*\n`
+    eventDetailMsg += `• Bet: ${formatString(formatVolume(event.volume))}`;
+    eventDetailMsg += `\n• volume24hr: ${formatString(formatVolume(event.volume24hr))}`;
     eventDetailMsg += `\n• commentCount: ${event.commentCount}\n\n`;
     let currentMarketList: IMarket[] = event.markets;
     if(!currentMarketList || currentMarketList.length == 0) {
@@ -49,7 +49,7 @@ export function showEventDetail(ctx: MyContext, id: string) {
         for (let j = 0; j < maxLength; j++) {//只需要列出前3个
             let market = currentMarketList[j];
             let url = getOperationUrl(event, market);
-            eventDetailMsg += `*${(j + 1) + '\\. ' + market.groupItemTitle.replace(/\./g, '\\.').replace(/\-/g, '\\.')}*    ${Math.round(market.bestAsk * 100)}%      [\\[Yes\\]](${url + '_0'})       [\\[No\\]](${url + '_1'})\n\n`;
+            eventDetailMsg += `*${(j + 1) + '\\. ' + formatString(market.groupItemTitle)}*    ${Math.round(market.bestAsk * 100)}%      [\\[Yes\\]](${url + '_0'})       [\\[No\\]](${url + '_1'})\n\n`;
         }
     } else {
         let url = getOperationUrl(event, currentMarketList[0]);

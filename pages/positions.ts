@@ -4,6 +4,7 @@ import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import { BACK_TO_INDEX } from "../utils/constant";
 import { queryUserInfo } from "../utils/db";
+import { formatString } from "../utils/utils";
 
 
 
@@ -29,12 +30,12 @@ async function queryPositionsShowMsg(ctx: Context) {
         }
         showMsg += `\n• Market: *${element.title}* 📈`
         showMsg += `\n• Type: ${element.outcome}`;
-        showMsg += `\n• avgPrice: ${Math.round(element.avgPrice * 100).toString().replace('.', '\\.')}¢`
+        showMsg += `\n• avgPrice: ${formatString(Math.round(element.avgPrice * 100).toString())}¢`
         showMsg += `\n• Shares: ${Math.round(element.size)}`
-        showMsg += `\n• Lastest: ${Math.round(element.curPrice * 100).toString().replace('.', '\\.')}¢`
-        showMsg += `\n• Bet: $${element.initialValue.toFixed(2).toString().replace('.', '\\.')}`
-        showMsg += `\n• Current: $${element.currentValue.toFixed(2).toString().replace('.', '\\.')}\\(${element.percentPnl.toFixed(2).replace('-', '\\-').replace('.', '\\.')}%\\)`
-        showMsg += `\n• To win: $${element.size.toFixed(2).toString().replace('.', '\\.')}`
+        showMsg += `\n• Lastest: ${formatString(Math.round(element.curPrice * 100).toString())}¢`
+        showMsg += `\n• Bet: $${formatString(element.initialValue.toFixed(2).toString())}`
+        showMsg += `\n• Current: $${formatString(element.currentValue.toFixed(2).toString())}\\(${formatString(element.percentPnl.toFixed(2))}%\\)`
+        showMsg += `\n• To win: $${formatString(element.size.toFixed(2).toString())}`
         showMsg += `\n• Operation: [*[Trade]*](https://www.google.com.hk/)`;
         showMsg += `\n`;
     });

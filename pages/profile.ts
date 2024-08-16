@@ -4,7 +4,7 @@ import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import UserInfo, { IUserInfo } from "../schema/UserInfo";
 import axios from "axios";
-import { formatUSDC, formatUSDCToString } from "../utils/utils";
+import { formatString, formatUSDC, formatUSDCToString } from "../utils/utils";
 import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX } from "../utils/constant";
 import { queryUserInfo } from "../utils/db";
 
@@ -31,8 +31,8 @@ address: \`${userInfo.userAddress}\`
 proxyWallet: \`${userInfo.proxyWallet}\`
 
 *Assets*
-cash: $${formatUSDCToString(cash).replace(".", "\\.")}
-portfolio:$${portfolio.toString().replace(".", "\\.")}
+cash: $${formatString(formatUSDCToString(cash))}
+portfolio:$${formatString(portfolio.toString())}
 
 USDC address: \`0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174\`
 

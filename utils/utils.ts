@@ -121,3 +121,15 @@ export function sortMarket(marketList: IMarket[]) {
         return parseFloat(b.volume) - parseFloat(a.volume);
     })
 }
+
+export function formatString(value: string) {
+    if(!value || value.length == 0) {
+        return value;
+    }
+    try {
+        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#');
+    }catch(error) {
+        console.log('format string error');
+        return value;
+    }
+}

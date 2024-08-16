@@ -2,7 +2,7 @@ import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage, ExtraEditMessageText } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import { initClobClientGnosis } from "../clobclientInit";
-import { formatExpiration } from "../utils/utils";
+import { formatExpiration, formatString } from "../utils/utils";
 import { OPEN_ORDERS_REFRESH, BACK_TO_INDEX } from "../utils/constant";
 import axios from "axios";
 
@@ -63,9 +63,9 @@ async function getShowMsg(ctx: Context, openOrderList: IOpenOrder[] | null) {
         showMsg += `\n• Side: ${element.side}`;
         showMsg += `\n• Outcome: ${element.outcome}`
         showMsg += `\n• Operation: [\\[Cancel\\]](${cancelOrderUrl})`
-        showMsg += `\n• Price: ${Math.round(parseFloat(element.price) * 100).toString().replace('.', '\\.')}¢`
+        showMsg += `\n• Price: ${formatString(Math.round(parseFloat(element.price) * 100).toString())}¢`
         showMsg += `\n• Filled: ${element.size_matched} / ${element.original_size}`
-        showMsg += `\n• Total: $${total.toString().replace('.', '\\.')}`
+        showMsg += `\n• Total: $${formatString(total.toString())}`
         showMsg += `\n• Expiration: ${formatExpiration(element.expiration)}`
         showMsg += `\n`;
     }

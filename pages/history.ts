@@ -2,7 +2,7 @@ import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import axios from "axios";
-import { formatTimestampToString, omitTxhash } from "../utils/utils";
+import { formatString, formatTimestampToString, omitTxhash } from "../utils/utils";
 import { BACK_TO_INDEX } from "../utils/constant";
 import { queryUserInfo } from "../utils/db";
 
@@ -31,11 +31,11 @@ async function queryHistoryShowMsg(ctx: Context) {
         showMsg += `\n• Market: *${element.title}* 📈`
         showMsg += `\n• Type: ${element.side}`;
         showMsg += `\n• Outcome: ${element.outcome}`
-        showMsg += `\n• Price: ${Math.round(element.price * 100).toString().replace('.', '\\.')}¢`
+        showMsg += `\n• Price: ${formatString(Math.round(element.price * 100).toString())}¢`
         showMsg += `\n• Shares: ${Math.round(element.size)}`
-        showMsg += `\n• Value: $${element.usdcSize.toFixed(2).toString().replace('.', '\\.')}`
+        showMsg += `\n• Value: $${formatString(element.usdcSize.toFixed(2).toString())}`
         showMsg += `\n• Date: ${formatTimestampToString(element.timestamp)}`
-        showMsg += `\n• Transaction: [${omitTxhash(element.transactionHash).replace(/\./g, '\\.')}](https://polygonscan.com/tx/${element.transactionHash})`
+        showMsg += `\n• Transaction: [${formatString(omitTxhash(element.transactionHash))}](https://polygonscan.com/tx/${element.transactionHash})`
         showMsg += `\n• Detail: [*detail*](https://polymarket.com/event/${element.eventSlug}/${element.slug})`;
         showMsg += `\n`;
     });
