@@ -9,14 +9,21 @@ import {
     MARKETS_ORDER_OP_BUY,
     MARKETS_ORDER_OP_SELL,
     MARKETS_ORDER_OP_MARKET,
-    MARKETS_ORDER_OP_LIMIT
+    MARKETS_ORDER_OP_LIMIT,
+    MARKETS_CATEGORY_PREFIX,
+    MARKETS_BACK_TO_CATEGORY,
+    MARKETS_BACK_TO_TOPIC,
+    MARKETS_BACK_TO_INDEX
 } from "../utils/constant";
 import { showProfile, updateProfile } from './profile';
 import { showHistory } from './history';
 import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from './openOrders';
 import { showPositions } from './positions';
-import { showMarket } from './markets';
+import { showCategoryList, updateCategoryList } from './categoryList';
 import { createOrder, showMarketOrLimitButton } from './Order';
+import { showTopicList } from './topicList';
+import { MyContext } from '../index';
+import { showEventList } from './eventList';
 
 
 
@@ -31,6 +38,69 @@ export function actions(bot: Telegraf) {
     openOrdersActions(bot);
     orderBuyAndSellActions(bot);
     orderMarketOrLimitActions(bot);
+    categoryListActions(bot);
+    topicListActions(bot);
+    eventListActions(bot);
+}
+
+function categoryListActions(bot: Telegraf) {
+    bot.action(/markets_category_prefix_(\d+)/, ctx => {
+        let itemId = ctx.match[1]; // 使用正则表达式捕获的 ID
+        // ctx.reply(`你点击了第${parseInt(itemId)}个按钮`)
+        // go to topic list
+        let categoryList = (ctx as MyContext).session?.categoryList;
+        if(categoryList == null || categoryList.length == 0) {
+            ctx.reply('Category list is empty\\.');
+            return;
+        }
+        let category = categoryList[parseInt(itemId)];
+        console.log('当前选择了:', category.slug);
+        (ctx as MyContext).session!.selectedCategory = category;
+        showTopicList(ctx);
+    });
+    bot.action(MARKETS_BACK_TO_INDEX, (ctx: MyContext) => {
+        //clear selectedCategory and topicList
+        ctx.session!.categoryList = undefined;
+        ctx.deleteMessage();  // 删除当前的消息
+        ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
+        showIndex(ctx);
+    });
+}
+
+//, toplicsList: ICategory[], categoryLabel: string, categorySlug: string
+function topicListActions(bot: Telegraf) {
+    bot.action(/markets_topic_prefix_(\d+)/, ctx => {
+        
+        let itemId = ctx.match[1]; // 使用正则表达式捕获的 ID
+        // console.log("点击了Topic list中的一个:", itemId);
+        // ctx.reply(`你点击了第${parseInt(itemId)}个按钮`)
+        // go to event list
+        let topicList = (ctx as MyContext).session?.topicList;
+        if(topicList == null || topicList.length == 0) {
+            ctx.reply('Topic list is empty\\.');
+            return;
+        }
+        // let category = (ctx as MyContext).session!.selectedCategory;
+        let topic = topicList[parseInt(itemId)];
+        console.log('当前选择了:', topic.slug);
+        (ctx as MyContext).session!.selectedTopic = topic;
+        showEventList(ctx);
+    });
+    bot.action(MARKETS_BACK_TO_CATEGORY, async (ctx: MyContext) => {
+        //clear selectedCategory and topicList
+        ctx.session!.selectedCategory = undefined;
+        ctx.session!.topicList = undefined;
+        updateCategoryList(ctx);
+    })
+}
+
+function eventListActions(bot: Telegraf) {
+    //, categoryLabel: string, categorySlug: string
+    bot.action(MARKETS_BACK_TO_TOPIC, async (ctx: MyContext) => {
+        //clear selected topic
+        ctx.session!.selectedTopic = undefined;
+        showTopicList(ctx);
+    })
 }
 
 function indexActions(bot: Telegraf) {
@@ -39,7 +109,7 @@ function indexActions(bot: Telegraf) {
         ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
     });
     bot.action(INDEX_PAGE_MARKETS, async (ctx: Context) => {
-        showMarket(bot, ctx);
+        showCategoryList(bot, ctx);
         ctx.deleteMessage();  // 删除当前的消息
         ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
 

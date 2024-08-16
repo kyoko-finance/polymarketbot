@@ -4,19 +4,29 @@ import { MARKETS_BACK_TO_TOPIC } from "../utils/constant";
 import { ExtraEditMessageText } from "telegraf/typings/telegram-types";
 import { formatString, formatVolume, sortMarket } from "../utils/utils";
 import axios from "axios";
-import { showTopics } from "./topicList";
 import { MyContext } from "../index";
 
 
 
-export async function showEvent(bot: Telegraf, ctx: MyContext, topicLabel: string, topicSlug: string, categoryLabel: string, categorySlug: string) {
+export async function showEventList(ctx: MyContext) {
+    let selectedCategory = ctx.session!.selectedCategory;
+    let selectedTopic = ctx.session!.selectedTopic;
+    if(!selectedCategory || !selectedTopic) {
+        ctx.reply('Selected category/topic is empty\\.');
+        return;
+    }
+
+    let categoryLabel = selectedCategory.label;
+    let categorySlug = selectedCategory.slug;
+    let topicLabel = selectedTopic.label;
+    let topicSlug = selectedTopic.slug;
+
     let eventList: IEvent[] = await getEventApi(categorySlug, topicSlug);
     if (!eventList || eventList.length == 0) {
         ctx.reply("No available event.")
         return;
     }
     var eventMessage = getEventShowMsg(ctx, eventList, categoryLabel, topicLabel);
-    eventActions(bot, categoryLabel, categorySlug);
     ctx.editMessageText(
         eventMessage as string,
         {
@@ -27,16 +37,16 @@ export async function showEvent(bot: Telegraf, ctx: MyContext, topicLabel: strin
             }
         } as ExtraEditMessageText
     ).catch((error) => {
-        console.log('error:', error);
+        // console.log('error:', error);
     })
 }
 
 function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: string, topicLabel: string) {
-    console.log("打印session:", ctx.session);
+    // console.log("打印session:", ctx.session);
     var eventMessage = `*Markets:*\n*${categoryLabel}*\\-*${topicLabel}*\n`;
 
     // ctx.session ??= { selectedEventList: [], messageCount: 0 };
-    ctx.session.selectedEventList = eventList;
+    ctx.session!.selectedEventList = eventList;
 
 
     if (!eventList || eventList.length == 0) {
@@ -44,11 +54,6 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
     }
     for (var i = 0; i < eventList.length; i++) {
         let element = eventList[i];
-
-        if(i == 0) {
-            // console.log(element);
-            // console.log('第一个的id是：', element.id, ",", element.title);
-        }
 
         //ed表示event detail
         var cancelOrderUrl = `https://t.me/polymarket_kbot?start=ed-${element.id}`
@@ -81,12 +86,6 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         eventMessage += `\n`;
     }
     return eventMessage.replace(/\+/g, '\\+');
-}
-
-function eventActions(bot: Telegraf, categoryLabel: string, categorySlug: string) {
-    bot.action(MARKETS_BACK_TO_TOPIC, async (ctx: Context) => {
-        showTopics(bot, ctx, categoryLabel, categorySlug);
-    })
 }
 
 
@@ -124,7 +123,7 @@ function getEventUrl(categorySlug: string, topicSlug: string) {
     } else if(topicSlug === 'top') {
         url = `${baseUrl}tag_slug=${categorySlug}&order=volume24hr`;
     }
-    console.log("categorySlug:" + categorySlug + ",topicSlug:" + topicSlug, ",url是：", url);
+    // console.log("categorySlug:" + categorySlug + ",topicSlug:" + topicSlug, ",url是：", url);
      return url;
 }
 

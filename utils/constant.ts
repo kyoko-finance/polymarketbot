@@ -29,6 +29,8 @@ export const MARKETS_CATEGORY_PREFIX = 'markets_category_prefix_';
 
 export const MARKETS_TOPIC_PREFIX = 'markets_topic_prefix_';
 
+export const MARKETS_BACK_TO_INDEX = 'markets_back_to_index';
+
 export const MARKETS_BACK_TO_CATEGORY = 'markets_back_to_category';
 
 export const MARKETS_BACK_TO_TOPIC = 'markets_back_to_topic';

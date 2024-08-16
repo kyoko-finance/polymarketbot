@@ -6,14 +6,21 @@ import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { actions } from './pages/actions';
 import 'dotenv/config';
 import { IEvent, IMarket } from './pages/eventList';
+import { ICategory } from './pages/categoryList';
 
 
 interface SessionData {
+  categoryList: ICategory[] | undefined;
+  selectedCategory: ICategory | undefined;
+  topicList: ICategory[] | undefined;
+  selectedTopic: ICategory | undefined;
+
   selectedEventList: IEvent[];
   selectedEvent: IEvent;
   selectedMarket: IMarket;
   selectedYesOrNo: string;
   selectedBuyOrSell: string | undefined;
+
 }
 
 export interface MyContext extends Context {

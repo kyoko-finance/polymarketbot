@@ -127,7 +127,7 @@ export function formatString(value: string) {
         return value;
     }
     try {
-        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\#').replace(/\(/g, '\\#').replace(/\)/g, '\\#');
+        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\#').replace(/\(/g, '\\#').replace(/\)/g, '\\#').replace(/\>/g, '\\#');
     }catch(error) {
         console.log('format string error');
         return value;
