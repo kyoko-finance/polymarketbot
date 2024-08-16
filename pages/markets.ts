@@ -24,8 +24,19 @@ export async function showMarket(bot: Telegraf, ctx: Context) {
 async function getCategoryApi() {
     try {
         const category = await axios.get('https://polymarket.com/api/tags/filtered?tag=100221&status=active');
-        // console.log(`getCategory:`, category.data);
-        return category.data as ICategory[];
+        console.log(`getCategory:`, category.data);
+        //add a 'New' category to position 1
+        let list: ICategory[] = category.data;
+        if(category.data == null || category.data.length == 0) {
+            return list;
+        }
+        let newCategory: ICategory = {
+            id: '',
+            label: 'New',
+            slug: 'new'
+        }
+        list.splice(1, 0, newCategory);
+        return list;
     } catch (error) {
         console.log(error);
         return [];

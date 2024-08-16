@@ -10,7 +10,7 @@ import { MyContext } from "../index";
 
 
 export async function showEvent(bot: Telegraf, ctx: MyContext, topicLabel: string, topicSlug: string, categoryLabel: string, categorySlug: string) {
-    var eventList: IEvent[] = await getEventApi(topicSlug);
+    let eventList: IEvent[] = await getEventApi(categorySlug, topicSlug);
     if (!eventList || eventList.length == 0) {
         ctx.reply("No available event.")
         return;
@@ -47,7 +47,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
 
         if(i == 0) {
             // console.log(element);
-            console.log('第一个的id是：', element.id, ",", element.title);
+            // console.log('第一个的id是：', element.id, ",", element.title);
         }
 
         //ed表示event detail
@@ -97,10 +97,35 @@ function getEventMenu(): InlineKeyboardButton[][] {
     ]]
 }
 
-async function getEventApi(topicSlug: string) {
-    var resp = await axios.get(`https://gamma-api.polymarket.com/events?limit=10&active=true&archived=false&tag_slug=${topicSlug}&closed=false&order=volume24hr&ascending=false&offset=0`);
+async function getEventApi(categorySlug: string, topicSlug: string) {
+    var resp = await axios.get(getEventUrl(categorySlug, topicSlug));
     var eventList: IEvent[] = resp.data;
     return eventList;
+}
+
+function getEventUrl(categorySlug: string, topicSlug: string) {
+    let baseUrl = 'https://gamma-api.polymarket.com/events?limit=10&active=true&archived=false&closed=false&ascending=false&offset=0&';
+    let url = `${baseUrl}tag_slug=${topicSlug}&order=volume24hr`;
+    if(categorySlug === 'new' || categorySlug === 'all') {
+        if(topicSlug === 'top') {
+            url = `${baseUrl}order=volume24hr`;
+        } else if(topicSlug === 'new') {
+            url = `${baseUrl}order=startDate`;
+        } else {
+            if(categorySlug === 'all') {
+                url = `${baseUrl}tag_slug=${topicSlug}&order=startDate`;
+            } else {
+                url = `${baseUrl}tag_slug=${topicSlug}&order=volume24hr`;
+            }
+            
+        }
+    }else if(topicSlug === 'new') {
+        url = `${baseUrl}tag_slug=${categorySlug}&order=startDate`;
+    } else if(topicSlug === 'top') {
+        url = `${baseUrl}tag_slug=${categorySlug}&order=volume24hr`;
+    }
+    console.log("categorySlug:" + categorySlug + ",topicSlug:" + topicSlug, ",url是：", url);
+     return url;
 }
 
 

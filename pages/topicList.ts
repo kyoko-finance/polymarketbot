@@ -59,7 +59,29 @@ function topicActions(bot: Telegraf, toplicsList: ICategory[], categoryLabel: st
 }
 
 async function getTopicsApi(categorySlug: string) {
-    const market = await axios.get(`https://polymarket.com/api/tags/filteredBySlug?tag=${categorySlug}&status=active`);
-    // console.log(`getTopicsApi: `, market.data);
-    return market.data as ICategory[];
+    if(categorySlug === 'new') {
+        //new下的topic分类和all分类下的一样
+        categorySlug = 'all';
+    }
+    const topics = await axios.get(`https://polymarket.com/api/tags/filteredBySlug?tag=${categorySlug}&status=active`);
+    // console.log(`getTopicsApi: `, topics.data);
+    let topicList: ICategory[] = topics.data;
+    if(!topicList || topicList.length == 0) {
+        return topicList;
+    }
+    //每个分类下都有一个Top,在第一个位置
+    let topTopic = {
+        id: '',
+        label: 'Top',
+        slug: 'top'
+    }
+    topicList.splice(0, 0, topTopic);
+    //每个分类下都有一个New,在第二个位置
+    let newTopic = {
+        id: '',
+        label: 'New',
+        slug: 'new'
+    }
+    topicList.splice(1, 0, newTopic);
+    return topicList as ICategory[];
 }
