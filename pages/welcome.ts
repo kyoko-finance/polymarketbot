@@ -20,7 +20,7 @@ export function welcome(bot: Telegraf) {
         const payload = ctx.payload; // 获取深链接中的 payload
         if (payload) {
             console.log(`Received payload: ${payload}`);
-            var handle = handlePayload(bot, ctx, payload);
+            var handle = handlePayload(ctx, payload);
             if(handle) {
                 return;
             }
@@ -43,7 +43,7 @@ export function welcome(bot: Telegraf) {
     })
 }
 
-function handlePayload(bot: Telegraf, ctx: Context, payload: string) {
+function handlePayload(ctx: Context, payload: string) {
     const parts = payload.split('-', 2); // 以第一个 - 进行分割，限制分割次数为2
     if(parts.length <= 1) {
         return;
@@ -62,7 +62,7 @@ function handlePayload(bot: Telegraf, ctx: Context, payload: string) {
         return true;
     }
     if(action == 'edo') {//et代表在eventDetail页面点击了Yes或者No
-        showOrderBuyAndSellButton(bot, ctx, params)
+        showOrderBuyAndSellButton(ctx, params)
         return true;
     }
     return false;

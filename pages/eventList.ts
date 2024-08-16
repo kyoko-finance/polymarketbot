@@ -26,6 +26,9 @@ export async function showEventList(ctx: MyContext) {
         ctx.reply("No available event.")
         return;
     }
+    // console.log("******************")
+    // console.log("事件列表中的第一个是：", eventList[0].markets);
+    // console.log("******************")
     var eventMessage = getEventShowMsg(ctx, eventList, categoryLabel, topicLabel);
     ctx.editMessageText(
         eventMessage as string,

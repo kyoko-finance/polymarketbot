@@ -20,10 +20,11 @@ import { showHistory } from './history';
 import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from './openOrders';
 import { showPositions } from './positions';
 import { showCategoryList, updateCategoryList } from './categoryList';
-import { createOrder, showMarketOrLimitButton } from './Order';
+import { showMarketOrLimitButton } from './Order';
 import { showTopicList } from './topicList';
 import { MyContext } from '../index';
 import { showEventList } from './eventList';
+import { createOrder } from './createOrder';
 
 
 
@@ -163,10 +164,10 @@ function openOrdersActions(bot: Telegraf) {
 
 function orderBuyAndSellActions(bot: Telegraf) {
     bot.action(MARKETS_ORDER_OP_BUY, async (ctx: Context) => {
-        showMarketOrLimitButton(bot, ctx, '0');
+        showMarketOrLimitButton(ctx, '0');
     });
     bot.action(MARKETS_ORDER_OP_SELL, async (ctx: Context) => {
-        showMarketOrLimitButton(bot, ctx, '1');
+        showMarketOrLimitButton(ctx, '1');
     });
 }
 

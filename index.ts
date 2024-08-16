@@ -7,6 +7,7 @@ import { actions } from './pages/actions';
 import 'dotenv/config';
 import { IEvent, IMarket } from './pages/eventList';
 import { ICategory } from './pages/categoryList';
+import { IOrderBook } from './pages/Order';
 
 
 interface SessionData {
@@ -21,6 +22,7 @@ interface SessionData {
   selectedYesOrNo: string;
   selectedBuyOrSell: string | undefined;
 
+  // orderBook: IOrderBook[] | undefined;
 }
 
 export interface MyContext extends Context {

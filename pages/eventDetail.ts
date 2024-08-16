@@ -31,6 +31,9 @@ export function showEventDetail(ctx: MyContext, id: string) {
         ctx.reply('🥲can not find event.')
         return;
     }
+
+    // console.log("当前选中的事件是：",event);
+
     let eventDetailMsg = '';
 
     eventDetailMsg += `*Event details: *\n`;
