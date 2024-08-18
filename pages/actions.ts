@@ -24,7 +24,7 @@ import { showMarketOrLimitButton } from './Order';
 import { showTopicList } from './topicList';
 import { MyContext } from '../index';
 import { showEventList } from './eventList';
-import { createOrder } from './createOrder';
+import { createOrder, showInputAmount } from './createOrder';
 
 
 
@@ -50,7 +50,7 @@ function categoryListActions(bot: Telegraf) {
         // ctx.reply(`你点击了第${parseInt(itemId)}个按钮`)
         // go to topic list
         let categoryList = (ctx as MyContext).session?.categoryList;
-        if(categoryList == null || categoryList.length == 0) {
+        if (categoryList == null || categoryList.length == 0) {
             ctx.reply('Category list is empty\\.');
             return;
         }
@@ -71,13 +71,13 @@ function categoryListActions(bot: Telegraf) {
 //, toplicsList: ICategory[], categoryLabel: string, categorySlug: string
 function topicListActions(bot: Telegraf) {
     bot.action(/markets_topic_prefix_(\d+)/, ctx => {
-        
+
         let itemId = ctx.match[1]; // 使用正则表达式捕获的 ID
         // console.log("点击了Topic list中的一个:", itemId);
         // ctx.reply(`你点击了第${parseInt(itemId)}个按钮`)
         // go to event list
         let topicList = (ctx as MyContext).session?.topicList;
-        if(topicList == null || topicList.length == 0) {
+        if (topicList == null || topicList.length == 0) {
             ctx.reply('Topic list is empty\\.');
             return;
         }
@@ -174,10 +174,15 @@ function orderBuyAndSellActions(bot: Telegraf) {
 function orderMarketOrLimitActions(bot: Telegraf) {
     bot.action(MARKETS_ORDER_OP_MARKET, async (ctx: Context) => {
         // + event.id + "," + market.id + ",YesOrNo:" +  yesOrNo + ",buyOrSell:" + buyOrSell
-        createOrder(ctx, true);
+        // await createOrder(ctx, true, 100);
+        // 获取按钮所在的消息ID
+        const messageId = ctx.callbackQuery!.message!.message_id;
+        showInputAmount(ctx, '0', messageId);
     });
     bot.action(MARKETS_ORDER_OP_LIMIT, async (ctx: Context) => {
         // + event.id + "," + market.id + ",YesOrNo:" + yesOrNo + ",buyOrSell:" + buyOrSell
-        createOrder(ctx, false);
+        // await createOrder(ctx, false, 100);
+        const messageId = ctx.callbackQuery!.message!.message_id;
+        showInputAmount(ctx, '1', messageId)
     });
 }

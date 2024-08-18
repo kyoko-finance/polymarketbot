@@ -133,3 +133,9 @@ export function formatString(value: string) {
         return value;
     }
 }
+
+export function isValidAmountOrPrice(input: string): boolean {
+    const num = Number(input);
+    return !isNaN(num) && num > 0;
+}
+

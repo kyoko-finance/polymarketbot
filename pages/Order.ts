@@ -61,9 +61,9 @@ export async function showOrderBuyAndSellButton(ctx: MyContext, params: string) 
     }
     let orderActionMsg = '';
     if (event.markets.length > 1) {
-        orderActionMsg += `You have select *${market.groupItemTitle}\\-${yesOrNoStr}*\\.\n`;
+        orderActionMsg += `1\\. You have select *${market.groupItemTitle}\\-${yesOrNoStr}*\\.\n`;
     } else {
-        orderActionMsg += `You have select *${yesOrNoStr}*\\.\n`;
+        orderActionMsg += `1\\. You have select *${yesOrNoStr}*\\.\n`;
     }
     //显示orderBook
     let orderBook = await getOrderBook(ctx.from!.id.toString(), JSON.parse(market.clobTokenIds) as string[]);
@@ -71,7 +71,7 @@ export async function showOrderBuyAndSellButton(ctx: MyContext, params: string) 
 
     console.log("eventId:", eventId, ',marketId:', marketId, ',YesOrNo:', yesOrNo);
     orderActionMsg += orderBookMsg;
-    orderActionMsg += `\nPlease select action: \n`;
+    orderActionMsg += `\n3\\. Please select action: \n`;
 
     ctx.replyWithMarkdownV2(orderActionMsg as string, { reply_markup: { inline_keyboard: getOrderOpMenu() }, disable_web_page_preview: true } as ExtraReplyMessage);
 }
@@ -86,9 +86,11 @@ function getOrderBookMsg(orderBookList: IOrderBook[], yesOrNo: string) {
     } else {
         orderBook = orderBookList[1];
     }
-    let asks = orderBook.asks.reverse().slice(0, 4).reverse();
-    let bids = orderBook.bids.reverse().slice(0, 4);
-    var message = '\n*ORDER BOOK*\n*PRICE*        *SHARES*        *TOTAL*\n';
+    let asks = orderBook.asks.slice(-4);
+    console.log("最新asks:", asks);
+    let bids = orderBook.bids.slice(-4).reverse();
+    console.log("最新bids:", bids);
+    var message = '\n2\\. ORDER BOOK\n*PRICE*        *SHARES*        *TOTAL*\n';
     for (let i = 0; i < asks.length; i++) {
         let price = formatString((parseFloat(asks[i].price) * 100).toFixed(1));
         let shares = formatString(parseFloat(asks[i].size).toFixed(2))
@@ -121,7 +123,7 @@ async function getOrderBook(id: string, clobTokenIds: string[]) {
         var orderBooks: IOrderBook[] = await clobClient.getOrderBooks([
             { token_id: YES },
             { token_id: NO },] as BookParams[]);
-        console.log("getOrderBook:", orderBooks);
+        // console.log("getOrderBook:", orderBooks[0]);
         return orderBooks;
     } catch {
         console.log("getOrderBook error")
@@ -171,13 +173,13 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     } else {
         tempMsg += 'Sell';
     }
-    orderTypeMsg += `You have select *${tempMsg}*\\.\n`;
+    orderTypeMsg += `1\\. You have select *${tempMsg}*\\.\n`;
     //显示orderBook
     let orderBook = await getOrderBook(ctx.from!.id.toString(), JSON.parse(selectedMarket!.clobTokenIds) as string[]);
     let orderBookMsg = getOrderBookMsg(orderBook, selectedYesOrNo!);
     orderTypeMsg += orderBookMsg;
 
-    orderTypeMsg += '\n*Please select order type: *\n';
+    orderTypeMsg += '\n*3\\. Please select order type: *\n';
     ctx.editMessageText(
         orderTypeMsg as string,
         {

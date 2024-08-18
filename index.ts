@@ -8,6 +8,8 @@ import 'dotenv/config';
 import { IEvent, IMarket } from './pages/eventList';
 import { ICategory } from './pages/categoryList';
 import { IOrderBook } from './pages/Order';
+import { isValidAmountOrPrice } from './utils/utils';
+import { handleInputAmountOrPrice } from './pages/createOrder';
 
 
 interface SessionData {
@@ -21,8 +23,14 @@ interface SessionData {
   selectedMarket: IMarket;
   selectedYesOrNo: string;
   selectedBuyOrSell: string | undefined;
+  selectedMarketOrLimit: string;
 
   // orderBook: IOrderBook[] | undefined;
+  currentInputAmountState: boolean;
+  currentInputPriceState: boolean;
+  currentInputMessageId: number;
+  inputAmount: string;
+  inputPrice: string | undefined;
 }
 
 export interface MyContext extends Context {
@@ -45,6 +53,14 @@ async function main() {
 
   welcome(bot);
   actions(bot);
+
+  bot.on(message('text'), async (ctx, next) => {
+    // Using context shortcut
+    // console.log("消息内容:", ctx.message.text)
+    // next();
+    var text = ctx.message.text;
+    handleInputAmountOrPrice(ctx, text);
+  });
 
 
   // bot.help((ctx) => ctx.reply('Send me a sticker'))
