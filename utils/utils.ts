@@ -95,7 +95,7 @@ export function formatVolume(volume: number): string {
     // console.log("volume:", volume);
     try {
         if(!volume) {
-            return '\\-'
+            return '-'
         }
         if (volume >= 1_000_000_000) {
             return (volume / 1_000_000_000).toFixed(1) + 'b';
@@ -130,7 +130,7 @@ export function formatString(value: string) {
         return value;
     }
     try {
-        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\*').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\>/g, '\\>').replace(/\+/g, '\\#');
+        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\*').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\>/g, '\\>').replace(/\+/g, '\\#').replace(/\&/g, '\\&');
     }catch(error) {
         console.log('format string error');
         return value;

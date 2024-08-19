@@ -76,7 +76,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         }
 
         var volumeStr = element.volume ? formatString(formatVolume(element.volume)) : '-';
-        var volume24hrStr = element.volume24hr ? formatString(formatVolume(element.volume24hr)) : '-';
+        var volume24hrStr = element.volume24hr ? formatString(formatVolume(element.volume24hr)) : '\\-';
 
         eventMessage += `• Bet: ${volumeStr}`;
         eventMessage += `\n• volume24hr: ${volume24hrStr}`
@@ -87,7 +87,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         }
         eventMessage += `\n`;
     }
-    return eventMessage.replace(/\+/g, '\\+');
+    return eventMessage;//.replace(/\+/g, '\\+')
 }
 
 

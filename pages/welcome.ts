@@ -22,14 +22,16 @@ export function welcome(bot: Telegraf) {
         if (payload) {
             console.log(`Received payload: ${payload}`);
             var handle = handlePayload(ctx, payload);
-            if(handle) {
+            if (handle) {
                 return;
             }
         }
-        
+
         //查询
         var userInfo = await queryUserInfo(ctx.from.id.toString());
 
+        //approve
+        await approveAllowance(ctx);
 
         var telegramUserInfo = ctx.from;
         if (userInfo == null) {
@@ -43,23 +45,23 @@ export function welcome(bot: Telegraf) {
 
 function handlePayload(ctx: Context, payload: string) {
     const parts = payload.split('-', 2); // 以第一个 - 进行分割，限制分割次数为2
-    if(parts.length <= 1) {
+    if (parts.length <= 1) {
         return;
     }
     var action = parts[0];
     var params = parts[1];
-    if(action === 'co') {//co代表cancelOrder
+    if (action === 'co') {//co代表cancelOrder
         // console.log("动作:", action);
         // console.log("参数:", params);
         deleteStartMessageAndCancelOrder(ctx, params);
         return true;
     }
-    if(action == 'ed') {//et代表eventDetail
+    if (action == 'ed') {//et代表eventDetail
         console.log('进入ed这里了', params);
         showEventDetail(ctx, params)
         return true;
     }
-    if(action == 'edo') {//et代表在eventDetail页面点击了Yes或者No
+    if (action == 'edo') {//et代表在eventDetail页面点击了Yes或者No
         showOrderBuyAndSellButton(ctx, params)
         return true;
     }
@@ -79,9 +81,6 @@ async function initUserPolymarketAccount(randomWallet: any, ctx: Context, telegr
         ctx.reply('Init failed, Please restart bot.');
         return;
     }
-
-    //approve
-    await approveAllowance(ctx);
 
     //save to db
     await saveUserInfo(telegramUserInfo.id.toString(), randomWallet.address, randomWallet.privateKey, creds, proxyWallet);
