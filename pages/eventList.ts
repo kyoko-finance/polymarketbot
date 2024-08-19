@@ -102,6 +102,7 @@ function getEventMenu(): InlineKeyboardButton[][] {
 async function getEventApi(categorySlug: string, topicSlug: string) {
     var resp = await axios.get(getEventUrl(categorySlug, topicSlug));
     var eventList: IEvent[] = resp.data;
+    // console.log('事件列表:', eventList);
     return eventList;
 }
 

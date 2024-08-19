@@ -50,13 +50,15 @@ function getPositionsMenu() {
 }
 
 async function getPositionsApi(proxyWallet: string) {
-    const positions = await axios.get(`https://polymarket.com/api/profile/positions?user=${proxyWallet}`);
+    let url = `https://data-api.polymarket.com/positions?user=${proxyWallet}`;
+    console.log(url);
+    const positions = await axios.get(url);
     var positionList = positions.data;
     console.log('getPositions:', positionList);
     return positionList as IPosition[] | null;
 }
 
-interface IPosition {
+export interface IPosition {
     proxyWallet: string;
     asset: string;
     conditionId: string;

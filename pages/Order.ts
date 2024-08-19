@@ -5,7 +5,11 @@ import { IEvent, IMarket } from "./eventList";
 import { MyContext } from "../index";
 import { initClobClientGnosis } from "../clobclientInit";
 import { BookParams } from "@polymarket/clob-client/dist/types";
-import { formatString } from "../utils/utils";
+import { formatString, getYesOrNoTokenIdBySelect } from "../utils/utils";
+import axios from "axios";
+import { IPosition } from "./positions";
+import { queryUserInfo } from "../utils/db";
+import { match } from "assert";
 
 
 /**
@@ -87,9 +91,9 @@ function getOrderBookMsg(orderBookList: IOrderBook[], yesOrNo: string) {
         orderBook = orderBookList[1];
     }
     let asks = orderBook.asks.slice(-4);
-    console.log("最新asks:", asks);
+    // console.log("最新asks:", asks);
     let bids = orderBook.bids.slice(-4).reverse();
-    console.log("最新bids:", bids);
+    // console.log("最新bids:", bids);
     var message = '\n2\\. ORDER BOOK\n*PRICE*        *SHARES*        *TOTAL*\n';
     for (let i = 0; i < asks.length; i++) {
         let price = formatString((parseFloat(asks[i].price) * 100).toFixed(1));
@@ -179,6 +183,25 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     let orderBookMsg = getOrderBookMsg(orderBook, selectedYesOrNo!);
     orderTypeMsg += orderBookMsg;
 
+    //如果是sell则查询当前选中的market的Shares
+    if (buyOrSell == '1') {
+        var userInfo = await queryUserInfo(ctx.from!.id.toString());
+        if (!userInfo) {
+            return;
+        }
+        var selectTokenId = await getYesOrNoTokenIdBySelect(ctx.from!.id.toString(), selectedMarket!.clobTokenIds, selectedYesOrNo!);
+        var positionList: IPosition[] | null = await getPositionsApi(userInfo.proxyWallet);
+        if (positionList && positionList.length > 0) {
+            positionList.forEach(element => {
+                // console.log("每一个element的id是", element.asset);
+                if (element.asset === selectTokenId) {
+                    orderTypeMsg += `\n_Your current market position: ${formatString(element.size.toFixed(2))} • ${Math.round(element.avgPrice * 100)}¢_\n`;
+                }
+            });
+        }
+    }
+
+
     orderTypeMsg += '\n*3\\. Please select order type: *\n';
     ctx.editMessageText(
         orderTypeMsg as string,
@@ -192,6 +215,13 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     ).catch((error) => {
         console.log('error:', error);
     })
+}
+
+async function getPositionsApi(proxyWallet: string) {
+    const positions = await axios.get(`https://data-api.polymarket.com/positions?user=${proxyWallet}`);
+    var positionList = positions.data;
+    // console.log('getPositions:', positionList);
+    return positionList as IPosition[] | null;
 }
 
 

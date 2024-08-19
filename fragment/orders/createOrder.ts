@@ -3,6 +3,8 @@
 import { ClobClient, Side, OrderType } from "@polymarket/clob-client";
 import { ethers } from "ethers";
 import 'dotenv/config';
+import { initClobClientGnosis } from "../../clobclientInit";
+import { Context } from "telegraf";
 
 async function main() {
 

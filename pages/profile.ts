@@ -22,9 +22,12 @@ async function queryProfileShowMsg(ctx: Context) {
     }
 
     var positionVaule = await queryCurrentPositionVaule(userInfo.proxyWallet);
+    console.log('positionVaule:', positionVaule);
 
     var cash: BigNumber = await queryCash(userInfo.proxyWallet);
+    console.log("cash:", cash.toString())
     var portfolio = (formatUSDC(cash) + positionVaule).toFixed(2);
+    console.log('portfolio:', portfolio);
     var profileMsg = `
     *Profile*
 address: \`${userInfo.userAddress}\`
@@ -87,6 +90,8 @@ async function queryCash(proxyWallet: string) {
 }
 
 async function queryCurrentPositionVaule(proxyWallet: string) {
-    const portfolio = await axios.get(`https://polymarket.com/api/profile/positions-value?user=${proxyWallet}`);
-    return (portfolio.data).value;
+    //previous url is: https://polymarket.com/api/profile/positions-value
+    const profile = await axios.get(`https://data-api.polymarket.com/value?user=${proxyWallet}`);
+    console.log("请求的结果是:", profile);
+    return ((profile.data)[0]).value;
 }

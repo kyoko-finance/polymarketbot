@@ -1,5 +1,8 @@
 import { BigNumber, ethers, Wallet } from 'ethers';
 import { IMarket } from '../pages/eventList';
+import { initClobClientGnosis } from '../clobclientInit';
+import { IOrderBook } from '../pages/Order';
+import { BookParams, ClobClient } from "@polymarket/clob-client";
 
 
 export function generateRandomPrivateKey() {
@@ -127,7 +130,7 @@ export function formatString(value: string) {
         return value;
     }
     try {
-        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\#').replace(/\(/g, '\\#').replace(/\)/g, '\\#').replace(/\>/g, '\\#');
+        return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\*').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\>/g, '\\>').replace(/\+/g, '\\#');
     }catch(error) {
         console.log('format string error');
         return value;
@@ -137,5 +140,36 @@ export function formatString(value: string) {
 export function isValidAmountOrPrice(input: string): boolean {
     const num = Number(input);
     return !isNaN(num) && num > 0;
+}
+
+export async function getYesAndNoTokenIds(id: string, clobTokenIds: string) {
+    try {
+        let clobTokenIdsArray = JSON.parse(clobTokenIds) as string[];
+        if (!clobTokenIdsArray || clobTokenIdsArray.length != 2) {
+            console.log('getOrderBook: tokenIds error');
+            return [];
+        }
+        const clobClient = await initClobClientGnosis(id);
+        if (!clobClient) {
+            return [];
+        }
+        const YES = clobTokenIdsArray[0];
+        const NO = clobTokenIdsArray[1];
+        return [YES, NO];
+    } catch {
+        console.log("getYesAndNoTokenIds error")
+        return [];
+    }
+}
+
+export async function getYesOrNoTokenIdBySelect(id: string, clobTokenIds: string, selectedYesOrNo: string) {
+    let tokenIds = await getYesAndNoTokenIds(id, clobTokenIds);
+    if(!tokenIds || tokenIds.length != 2) {
+        return null;
+    }
+    if(selectedYesOrNo == '0') {
+        return tokenIds[0];
+    }
+    return tokenIds[1];
 }
 
