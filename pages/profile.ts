@@ -92,6 +92,6 @@ async function queryCash(proxyWallet: string) {
 async function queryCurrentPositionVaule(proxyWallet: string) {
     //previous url is: https://polymarket.com/api/profile/positions-value
     const profile = await axios.get(`https://data-api.polymarket.com/value?user=${proxyWallet}`);
-    console.log("请求的结果是:", profile);
+    // console.log("请求的结果是:", profile);
     return ((profile.data)[0]).value;
 }

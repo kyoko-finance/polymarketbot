@@ -60,7 +60,6 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
 
         //ed表示event detail
         var cancelOrderUrl = `https://t.me/polymarket_kbot?start=ed-${element.id}`
-    
 
         eventMessage += `\n• Title: *${formatString(element.title)} 📈*\n`
         let currentMarketList: IMarket[] = element.markets;
