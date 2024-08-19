@@ -12,6 +12,7 @@ import { showIndex } from "./index";
 import { deleteStartMessageAndCancelOrder } from "./openOrders";
 import { showEventDetail } from "./eventDetail";
 import { showOrderBuyAndSellButton } from "./Order";
+import { approveAllowance } from "./approveAllowance";
 
 
 
@@ -26,18 +27,15 @@ export function welcome(bot: Telegraf) {
             }
         }
         
-        
-
         //查询
         var userInfo = await queryUserInfo(ctx.from.id.toString());
 
-        // console.log(userInfo);
 
         var telegramUserInfo = ctx.from;
         if (userInfo == null) {
             var randomWallet = await initUser(bot, ctx, telegramUserInfo);
             ctx.reply('Please wait while initializing user information...');
-            await initUserPolymarketAccount(randomWallet, bot, ctx, telegramUserInfo);
+            await initUserPolymarketAccount(randomWallet, ctx, telegramUserInfo);
         }
         showIndex(ctx);
     })
@@ -69,7 +67,7 @@ function handlePayload(ctx: Context, payload: string) {
 }
 
 
-async function initUserPolymarketAccount(randomWallet: any, bot: Telegraf, ctx: Context, telegramUserInfo: User) {
+async function initUserPolymarketAccount(randomWallet: any, ctx: Context, telegramUserInfo: User) {
     //createApiKey
     var creds = await createApiKey(randomWallet.privateKey);
 
@@ -81,6 +79,9 @@ async function initUserPolymarketAccount(randomWallet: any, bot: Telegraf, ctx: 
         ctx.reply('Init failed, Please restart bot.');
         return;
     }
+
+    //approve
+    await approveAllowance(ctx);
 
     //save to db
     await saveUserInfo(telegramUserInfo.id.toString(), randomWallet.address, randomWallet.privateKey, creds, proxyWallet);
