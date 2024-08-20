@@ -142,6 +142,17 @@ export function isValidAmountOrPrice(input: string): boolean {
     return !isNaN(num) && num > 0;
 }
 
+export function validPrice(input: string): boolean {
+    const num = Number(input);
+    if(isNaN(num)) {
+        return false;
+    }
+    if(num <= 0 || num >= 100) {
+        return false;
+    }
+    return true;
+}
+
 export async function getYesAndNoTokenIds(id: string, clobTokenIds: string) {
     try {
         let clobTokenIdsArray = JSON.parse(clobTokenIds) as string[];

@@ -59,7 +59,7 @@ async function getShowMsg(ctx: Context, openOrderList: IOpenOrder[] | null) {
         var cancelOrderUrl = `https://t.me/polymarket_kbot?start=co-${element.id.substring(2).slice(0, -5)}`
         console.log('cancelOrderUrl:', cancelOrderUrl);
 
-        showMsg += `\n• Market: [${market[0].question}](https://polymarket.com/event/${market[0].event_slug}/${market[0].market_slug}) 📈`
+        showMsg += `\n• Market: [${formatString(market[0].question)}](https://polymarket.com/event/${market[0].event_slug}/${market[0].market_slug}) 📈`
         showMsg += `\n• Side: ${element.side}`;
         showMsg += `\n• Outcome: ${element.outcome}`
         showMsg += `\n• Operation: [\\[Cancel\\]](${cancelOrderUrl})`
@@ -103,7 +103,7 @@ export async function deleteStartMessageAndCancelOrder(ctx: Context, prefixOrder
     ctx.deleteMessage();  // 删除当前的消息
     // ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
     if(success) {
-        ctx.reply('✅ This open order delete success. Click refresh button view the updated list.')
+        ctx.reply('✅ This open order cancel success. Click refresh button view the updated list.')
     }
 }
 

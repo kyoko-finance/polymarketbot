@@ -65,7 +65,7 @@ export async function showOrderBuyAndSellButton(ctx: MyContext, params: string) 
     }
     let orderActionMsg = '';
     if (event.markets.length > 1) {
-        orderActionMsg += `1\\. You have select *${market.groupItemTitle}\\-${yesOrNoStr}*\\.\n`;
+        orderActionMsg += `1\\. You have select *${formatString(market.groupItemTitle)}\\-${yesOrNoStr}*\\.\n`;
     } else {
         orderActionMsg += `1\\. You have select *${yesOrNoStr}*\\.\n`;
     }
@@ -165,7 +165,7 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     let orderTypeMsg = '';
     let tempMsg = '';
     if (groupItemTitle && groupItemTitle.length > 0) {
-        tempMsg += `${groupItemTitle}\\-`
+        tempMsg += `${formatString(groupItemTitle)}\\-`
     }
     if (selectedYesOrNo === '0') {
         tempMsg += `Yes\\-`;
@@ -191,18 +191,25 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
         }
         var selectTokenId = await getYesOrNoTokenIdBySelect(ctx.from!.id.toString(), selectedMarket!.clobTokenIds, selectedYesOrNo!);
         var positionList: IPosition[] | null = await getPositionsApi(userInfo.proxyWallet);
+        let exist = false;
         if (positionList && positionList.length > 0) {
             positionList.forEach(element => {
                 // console.log("每一个element的id是", element.asset);
                 if (element.asset === selectTokenId) {
+                    exist = true;
                     orderTypeMsg += `\n_Your current market position: ${formatString(element.size.toFixed(2))} • ${Math.round(element.avgPrice * 100)}¢_\n`;
                 }
             });
+        }
+        if(!exist) {
+            ctx.reply('You have no position.');
+            return;
         }
     }
 
 
     orderTypeMsg += '\n*3\\. Please select order type: *\n';
+    orderTypeMsg += `_Tip: Minimum 5 shares for limit orders_`;
     ctx.editMessageText(
         orderTypeMsg as string,
         {

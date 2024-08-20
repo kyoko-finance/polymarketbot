@@ -4,8 +4,7 @@ import { MyContext } from "../index";
 import { initClobClientGnosis } from "../clobclientInit";
 import { Side, OrderType, UserOrder } from "@polymarket/clob-client";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
-import { isValidAmountOrPrice } from "../utils/utils";
-import { IPosition } from "./positions";
+import { isValidAmountOrPrice, validPrice } from "../utils/utils";
 
 
 
@@ -18,7 +17,7 @@ export async function handleInputAmountOrPrice(ctx: MyContext, text: string) {
     }
     if (isInputAmountState) {
         if (!isValidAmountOrPrice(text)) {
-            ctx.reply("🥲Input amount error.");
+            ctx.reply("🥲Input error.");
             return;
         }
         ctx.session!.inputAmount = text;
@@ -28,24 +27,30 @@ export async function handleInputAmountOrPrice(ctx: MyContext, text: string) {
             let inputAmount = ctx.session?.inputAmount;
             let inputPrice = ctx.session?.inputPrice;
             if (!inputAmount) {
-                console.log('inputAmount error');
+                console.log('input amount error');
                 return;
             }
             await ctx.reply('✅The amount you entered is: ' + text);
             createOrder(ctx, selectedMarketOrLimit, Number(inputAmount), Number(inputPrice))
         } else {
-            //限价单
+            //限价单执行
+            //当前输入的是share的话，需要校验不小于5
+            if (Number(text) < 5) {
+                ctx.reply('Minimum 5 shares for limit orders');
+                ctx.session!.inputAmount = undefined;
+                return;
+            }
             let currentInputMessageId = ctx.session!.currentInputMessageId;
             showInputPirce(ctx, currentInputMessageId, text);
         }
         return;
     }
     if (isInputPriceState) {
-        if (!isValidAmountOrPrice(text)) {
+        if (!validPrice(text)) {
             ctx.reply("🥲Input price error\\.");
             return;
         }
-        ctx.session!.inputPrice = text;
+        ctx.session!.inputPrice = (parseFloat(text) / 100).toFixed(3).toString();
         //直接执行
         let inputAmount = ctx.session?.inputAmount;
         let inputPrice = ctx.session?.inputPrice;
@@ -65,11 +70,22 @@ export function showInputAmount(ctx: MyContext, marketOrLimit: string, messageId
     ctx.session!.currentInputAmountState = true;
     ctx.session!.currentInputPriceState = false;
     ctx.session!.currentInputMessageId = messageId;
-    ctx.reply("Please input amount:", {
+
+    // let selectedYesOrNo = ctx.session?.selectedYesOrNo;
+    let selectedBuyOrSell = ctx.session?.selectedBuyOrSell;
+
+    let replyMsg = 'Please input shares:';
+    let palceHolderMsg = 'Please Input shares';
+    //市价单&buy,直接输入购买金额
+    if (marketOrLimit == '0' && selectedBuyOrSell == '0') {
+        replyMsg = 'Please input amount:';
+        palceHolderMsg = 'Please Input amount'
+    }
+    ctx.reply(replyMsg, {
         reply_to_message_id: messageId,
         reply_markup: {
             force_reply: true, // 强制用户回复
-            input_field_placeholder: 'Please Input amount:', // 改变输入框中的提示文字
+            input_field_placeholder: palceHolderMsg, // 改变输入框中的提示文字
         },
     } as ExtraReplyMessage);
 }
@@ -77,8 +93,12 @@ export function showInputAmount(ctx: MyContext, marketOrLimit: string, messageId
 export function showInputPirce(ctx: MyContext, messageId: number, amount: string) {
     ctx.session!.currentInputAmountState = false;
     ctx.session!.currentInputPriceState = true;
-    ctx.reply(`✅The amount you entered is: ${amount} \n⏭️Please input price:`, {
+    ctx.reply(`✅The shares you entered is: ${amount} \n⏭️Please input price(0-100¢):`, {
         reply_to_message_id: messageId,
+        reply_markup: {
+            force_reply: true, // 强制用户回复
+            input_field_placeholder: 'Please input price(0-100)¢', // 改变输入框中的提示文字
+        },
     } as ExtraReplyMessage);
 }
 
@@ -103,8 +123,8 @@ export async function createOrder(ctx: MyContext, marketOrLimit: string, amount:
         tokenId = tokenIdsArray[1];
     }
 
-    if (marketOrLimit == '0') {
-        //市价单
+    if (marketOrLimit == '0' && selectedBuyOrSell == '1') {
+        //市价单，并且sell的情况下才需要查询价格，buy单只是需要添加金额
         let priceInfo = await getLastPrice(ctx, tokenId);
         if (!priceInfo) {
             return;
@@ -112,24 +132,23 @@ export async function createOrder(ctx: MyContext, marketOrLimit: string, amount:
         console.log('priceInfo:', priceInfo);
         let priceDetails: PriceDetails = priceInfo[tokenId];
         console.log('价格是多少：', priceDetails.BUY, ',', priceDetails.SELL);
-        if (selectedBuyOrSell == '0') {
-            price = parseFloat(priceDetails.SELL);
-        } else {
-            price = parseFloat(priceDetails.BUY);
-        }
+        price = parseFloat(priceDetails.BUY);
     }
-    console.log('你最终选择了:' + marketOrLimitStr + ",事件id:" + selectedEvent?.id + ",marketId:" + selectedMarket?.id +
-        ",选中YesOrNo:" + yesOrNoStr + ',选中BuyOrSell:' + buyOrSellStr + ',数量：' + amount + ',价格：' + price);
 
     if (marketOrLimit == '0' && selectedBuyOrSell == '0') {
+        //市价单&buy
         let resp = await createBuyMarketOrder(ctx, tokenId, amount);
         if (!resp || !resp.success) {
             ctx.reply('Create order failed.');
             return;
         }
-        ctx.reply(`🎉🎉🎉Create order success. TxHash:${resp.transactionsHashes}`);
+        afterCreateOrderSuccess(ctx, resp);
         return;
     }
+
+    // console.log('你最终选择了:' + marketOrLimitStr + ",事件id:" + selectedEvent?.id + ",marketId:" + selectedMarket?.id +
+    //     ",选中YesOrNo:" + yesOrNoStr + ',选中BuyOrSell:' + buyOrSellStr + ',数量：' + amount + ',价格：' + price);
+
     let userOrder: UserOrder = {
         tokenID:
             `${tokenId}`,//67651190137384692436254313465446414883079283131079052933923486306417976524160
@@ -144,7 +163,15 @@ export async function createOrder(ctx: MyContext, marketOrLimit: string, amount:
         ctx.reply('Create order failed.');
         return;
     }
-    ctx.reply(`🎉🎉🎉Create order success. TxHash:${resp.transactionsHashes}`);
+    afterCreateOrderSuccess(ctx, resp);
+}
+
+function afterCreateOrderSuccess(ctx: Context, resp: IOrder) {
+    let successMessage = `🎉🎉🎉Create order success. `;
+    if (resp.transactionsHashes) {
+        successMessage += `TxHash:${resp.transactionsHashes}`;
+    }
+    ctx.reply(successMessage);
 }
 
 /**
@@ -191,6 +218,13 @@ async function createNormalOrder(ctx: Context, userOrder: UserOrder) {
     }
 }
 
+/**
+ * 
+ * @param ctx 
+ * @param tokenID 
+ * @param amount 代表你要购买的金额
+ * @returns 
+ */
 async function createBuyMarketOrder(ctx: Context, tokenID: string, amount: number) {
     try {
         const clobClient = await initClobClientGnosis(ctx.from!.id.toString());

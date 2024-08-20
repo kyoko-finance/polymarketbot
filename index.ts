@@ -29,7 +29,7 @@ interface SessionData {
   currentInputAmountState: boolean;
   currentInputPriceState: boolean;
   currentInputMessageId: number;
-  inputAmount: string;
+  inputAmount: string | undefined;
   inputPrice: string | undefined;
 }
 
