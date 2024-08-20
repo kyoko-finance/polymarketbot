@@ -10,6 +10,7 @@ import { ICategory } from './pages/categoryList';
 import { IOrderBook } from './pages/Order';
 import { isValidAmountOrPrice } from './utils/utils';
 import { handleInputAmountOrPrice } from './pages/createOrder';
+import { commands } from './pages/commands';
 
 
 interface SessionData {
@@ -53,6 +54,8 @@ async function main() {
 
   welcome(bot);
   actions(bot);
+  commands(bot);
+
 
   bot.on(message('text'), async (ctx, next) => {
     // Using context shortcut
