@@ -108,25 +108,28 @@ async function getEventApi(categorySlug: string, topicSlug: string) {
 function getEventUrl(categorySlug: string, topicSlug: string) {
     let baseUrl = 'https://gamma-api.polymarket.com/events?limit=10&active=true&archived=false&closed=false&ascending=false&offset=0&';
     let url = `${baseUrl}tag_slug=${topicSlug}&order=volume24hr`;
-    if(categorySlug === 'new' || categorySlug === 'all') {
+    if(categorySlug === 'all') {
         if(topicSlug === 'top') {
             url = `${baseUrl}order=volume24hr`;
         } else if(topicSlug === 'new') {
             url = `${baseUrl}order=startDate`;
         } else {
-            if(categorySlug === 'all') {
-                url = `${baseUrl}tag_slug=${topicSlug}&order=startDate`;
-            } else {
-                url = `${baseUrl}tag_slug=${topicSlug}&order=volume24hr`;
-            }
-            
+            url = `${baseUrl}tag_slug=${topicSlug}&order=volume24hr`;
         }
-    }else if(topicSlug === 'new') {
+    } else if(categorySlug === 'new') {
+        if(topicSlug === 'top') {
+            url = `${baseUrl}order=volume24hr`;
+        } else if(topicSlug === 'new') {
+            url = `${baseUrl}order=startDate`;
+        } else {
+            url = `${baseUrl}tag_slug=${topicSlug}&order=startDate`;
+        }
+    } else if(topicSlug === 'new') {
         url = `${baseUrl}tag_slug=${categorySlug}&order=startDate`;
     } else if(topicSlug === 'top') {
         url = `${baseUrl}tag_slug=${categorySlug}&order=volume24hr`;
     }
-    // console.log("categorySlug:" + categorySlug + ",topicSlug:" + topicSlug, ",url是：", url);
+    console.log("categorySlug:" + categorySlug + ",topicSlug:" + topicSlug, ",url是：", url);
      return url;
 }
 
