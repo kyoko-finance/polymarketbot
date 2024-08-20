@@ -12,7 +12,6 @@ import { showIndex } from "./index";
 import { deleteStartMessageAndCancelOrder } from "./openOrders";
 import { showEventDetail } from "./eventDetail";
 import { showOrderBuyAndSellButton } from "./Order";
-import { approveAllowance } from "./approveAllowance";
 
 
 
@@ -30,16 +29,13 @@ export function welcome(bot: Telegraf) {
         //查询
         var userInfo = await queryUserInfo(ctx.from.id.toString());
 
-        //approve
-        await approveAllowance(ctx);
-
         var telegramUserInfo = ctx.from;
-        if (userInfo == null) {
+        if (!userInfo) {
             var randomWallet = await initUser(bot, ctx, telegramUserInfo);
             ctx.reply('Please wait while initializing user information...');
             await initUserPolymarketAccount(randomWallet, ctx, telegramUserInfo);
         }
-        showIndex(ctx);
+        showIndex(ctx, userInfo);
     })
 }
 
@@ -81,9 +77,11 @@ async function initUserPolymarketAccount(randomWallet: any, ctx: Context, telegr
         ctx.reply('Init failed, Please restart bot.');
         return;
     }
-
     //save to db
     await saveUserInfo(telegramUserInfo.id.toString(), randomWallet.address, randomWallet.privateKey, creds, proxyWallet);
+
+    //approve,一开始没有matic，所以这里一定失败
+    // await approveAllowance(ctx);
 }
 
 async function initUser(bot: Telegraf, ctx: Context, telegramUserInfo: User) {
@@ -127,7 +125,7 @@ async function saveUserInfo(id: string, userAddress: string, userPrivateKey: str
         clobApiKey: creds.key,
         clobSecret: creds.secret,
         clobPassPhrase: creds.passphrase,
-        proxyWallet: proxyWallet
+        proxyWallet: proxyWallet,
     })
     await userInfo.save();
 }

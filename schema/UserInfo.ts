@@ -9,6 +9,7 @@ export interface IUserInfo {
   clobSecret: string;
   clobPassPhrase: string;
   proxyWallet: string;
+  approved: boolean;
 }
 
 const UserInfoSchema: Schema = new mongoose.Schema({
@@ -22,6 +23,7 @@ const UserInfoSchema: Schema = new mongoose.Schema({
   clobSecret: String,
   clobPassPhrase: String,
   proxyWallet: String,
+  approved: Boolean,
 });
 
 

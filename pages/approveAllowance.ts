@@ -5,6 +5,7 @@ import { ctfAbi } from "../abi/ctfAbi";
 import 'dotenv/config';
 import { queryUserInfo } from "../utils/db";
 import { Context } from "telegraf";
+import UserInfo from "../schema/UserInfo";
 
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
@@ -23,7 +24,7 @@ export async function approveAllowance(ctx: Context) {
     try {
         var userInfo = await queryUserInfo(ctx.from!.id.toString());
         if (!userInfo) {
-            return;
+            return false;
         }
         const wallet = new ethers.Wallet(userInfo.userPrivatekey, provider);
         const chainId = await wallet.getChainId();
@@ -40,6 +41,8 @@ export async function approveAllowance(ctx: Context) {
         console.log(`ctf: ${ctf.address}`);
         //exchange:0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E
         console.log(`exchange:${contractConfig.exchange}`)
+
+        console.log("更新之前：", userInfo.approved);
 
         const usdcAllowanceCtf = (await usdc.allowance(wallet.address, ctf.address)) as BigNumber;
         console.log(`usdcAllowanceCtf: ${usdcAllowanceCtf}`);
@@ -84,9 +87,22 @@ export async function approveAllowance(ctx: Context) {
             });
             console.log(`Setting Conditional Tokens allowance for Exchange: ${txn.hash}`);
         }
+        //update approved
+        let result = await UserInfo.findByIdAndUpdate(
+            ctx.from!.id.toString(),
+            { approved: true },
+            { new: true, runValidators: true }
+        );
         console.log("Allowances set");
+        if(result) {
+            console.log('数据库更新成功')
+            return true;
+        }
+        return false;
     } catch (error) {
-        console.log('approveAllowance:', error);
+        // console.log('approveAllowance:', error);
+        console.log('approve failed.');
+        return false;
     }
 }
 
@@ -98,4 +114,4 @@ async function getGasPrice() {
     return gasPrice.mul(15).div(10);
 }
 
-getGasPrice();
+// getGasPrice();

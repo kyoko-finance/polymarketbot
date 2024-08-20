@@ -32,7 +32,7 @@ export function actions(bot: Telegraf) {
     bot.action(BACK_TO_INDEX, async (ctx: Context) => {
         ctx.deleteMessage();  // 删除当前的消息
         ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
-        showIndex(ctx);
+        showIndex(ctx, undefined);
     });
     indexActions(bot);
     profileActions(bot);
@@ -64,7 +64,7 @@ function categoryListActions(bot: Telegraf) {
         ctx.session!.categoryList = undefined;
         ctx.deleteMessage();  // 删除当前的消息
         ctx.answerCbQuery();  // 回应按钮点击（防止加载动画持续）
-        showIndex(ctx);
+        showIndex(ctx, undefined);
     });
 }
 
