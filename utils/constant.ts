@@ -18,6 +18,10 @@ export const INDEX_PAGE_DISMISS = 'index_page_dismiss';
 
 export const PROFILE_REFRESH_ASSETS = 'profile_refresh_assets';
 
+export const PROFILE_WITHDRAW = 'profile_withdraw';
+
+export const PROFILE_DEPOSIT = 'profile_deposit';
+
 export const BACK_TO_INDEX = 'back_to_index';
 
 export const OPEN_ORDERS_REFRESH = 'open_orders_refresh';

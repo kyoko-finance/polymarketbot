@@ -13,7 +13,9 @@ import {
     MARKETS_CATEGORY_PREFIX,
     MARKETS_BACK_TO_CATEGORY,
     MARKETS_BACK_TO_TOPIC,
-    MARKETS_BACK_TO_INDEX
+    MARKETS_BACK_TO_INDEX,
+    PROFILE_DEPOSIT,
+    PROFILE_WITHDRAW
 } from "../utils/constant";
 import { showProfile, updateProfile } from '../profile/profile';
 import { showHistory } from './history';
@@ -25,6 +27,8 @@ import { showTopicList } from './topicList';
 import { MyContext } from '../index';
 import { showEventList } from './eventList';
 import { createOrder, showInputAmount } from './createOrder';
+import { deposit, handleDeposit } from '../profile/deposit';
+import { handleWithdraw } from '../profile/withdraw';
 
 
 
@@ -142,6 +146,12 @@ function indexActions(bot: Telegraf) {
 }
 
 function profileActions(bot: Telegraf) {
+    bot.action(PROFILE_DEPOSIT, async (ctx: Context) => {
+        handleDeposit(ctx);
+    });
+    bot.action(PROFILE_WITHDRAW, async (ctx: Context) => {
+        handleWithdraw(ctx);
+    });
     bot.action(PROFILE_REFRESH_ASSETS, async (ctx: Context) => {
         updateProfile(ctx);
     });

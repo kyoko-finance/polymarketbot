@@ -93,7 +93,7 @@ export function formatExpiration(timestamp: string): string {
 export function formatVolume(volume: number): string {
     // console.log("volume:", volume);
     try {
-        if(!volume) {
+        if (!volume) {
             return '-'
         }
         if (volume >= 1_000_000_000) {
@@ -104,11 +104,11 @@ export function formatVolume(volume: number): string {
             return (volume / 1_000).toFixed(1) + 'k';
         } else {
             return volume.toFixed(1);
-        } 
-    }catch(error) {
+        }
+    } catch (error) {
         return volume.toString();
     }
-    
+
 }
 
 /**
@@ -125,12 +125,12 @@ export function sortMarket(marketList: IMarket[]) {
 }
 
 export function formatString(value: string) {
-    if(!value || value.length == 0) {
+    if (!value || value.length == 0) {
         return value;
     }
     try {
         return value.replace(/\./g, '\\.').replace(/\-/g, '\\-').replace(/\#/g, '\\#').replace(/\*/g, '\\*').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\>/g, '\\>').replace(/\+/g, '\\#').replace(/\&/g, '\\&').replace('x', '\\x');
-    }catch(error) {
+    } catch (error) {
         console.log('format string error');
         return value;
     }
@@ -143,10 +143,10 @@ export function isValidAmountOrPrice(input: string): boolean {
 
 export function validPrice(input: string): boolean {
     const num = Number(input);
-    if(isNaN(num)) {
+    if (isNaN(num)) {
         return false;
     }
-    if(num <= 0 || num >= 100) {
+    if (num <= 0 || num >= 100) {
         return false;
     }
     return true;
@@ -174,12 +174,25 @@ export async function getYesAndNoTokenIds(id: string, clobTokenIds: string) {
 
 export async function getYesOrNoTokenIdBySelect(id: string, clobTokenIds: string, selectedYesOrNo: string) {
     let tokenIds = await getYesAndNoTokenIds(id, clobTokenIds);
-    if(!tokenIds || tokenIds.length != 2) {
+    if (!tokenIds || tokenIds.length != 2) {
         return null;
     }
-    if(selectedYesOrNo == '0') {
+    if (selectedYesOrNo == '0') {
         return tokenIds[0];
     }
     return tokenIds[1];
 }
 
+
+export function isValidUSDCNumber(input: string) {
+    // 使用正则表达式匹配有效的数字，支持整数和最多6位的小数
+    const regex = /^-?\d+(\.\d{1,6})?$/;
+
+    // 检查是否匹配正则表达式并且不为 NaN
+    if (regex.test(input.trim())) {
+        const number = parseFloat(input.trim());
+        // 确保数字大于0
+        return number > 0;
+    }
+    return false;
+}

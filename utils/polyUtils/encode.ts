@@ -1,6 +1,9 @@
 import { BigNumber, ethers } from "ethers";
 import { Interface } from "ethers/lib/utils";
-import { erc20Abi, erc1155Abi, ctfAbi, negRiskAdapterAbi } from "./abis"
+import { erc20Abi } from "./abis/erc20Abi";
+import { erc1155Abi } from "./abis/erc1155Abi";
+import { ctfAbi } from "./abis/ctfAbi";
+import { negRiskAdapterAbi } from "./abis/negRiskAdapterAbi";
 
 
 const ERC20_INTERFACE = new Interface(erc20Abi);

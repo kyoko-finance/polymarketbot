@@ -2,15 +2,14 @@ import { Telegraf, Markup, Context, session } from 'telegraf'
 import { message } from 'telegraf/filters'
 import { DBConnect, getInstance } from './utils/db';
 import { welcome } from './pages/welcome';
-import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { actions } from './pages/actions';
 import 'dotenv/config';
 import { IEvent, IMarket } from './pages/eventList';
 import { ICategory } from './pages/categoryList';
-import { IOrderBook } from './pages/Order';
-import { isValidAmountOrPrice } from './utils/utils';
 import { handleInputAmountOrPrice } from './pages/createOrder';
 import { commands } from './pages/commands';
+import { deposit } from './profile/deposit';
+import { withdraw } from './profile/withdraw';
 
 
 interface SessionData {
@@ -32,6 +31,9 @@ interface SessionData {
   currentInputMessageId: number;
   inputAmount: string | undefined;
   inputPrice: string | undefined;
+
+  currentInputDepositUsdcState: boolean;
+  currentInputWithdrawUsdcState: boolean;
 }
 
 export interface MyContext extends Context {
@@ -58,10 +60,17 @@ async function main() {
 
 
   bot.on(message('text'), async (ctx, next) => {
-    // Using context shortcut
-    // console.log("消息内容:", ctx.message.text)
-    // next();
-    var text = ctx.message.text;
+    let text = ctx.message.text;
+    let currentInputDepositUsdcState = ctx.session!.currentInputDepositUsdcState;
+    if(currentInputDepositUsdcState) {
+      deposit(ctx, text);
+      return;
+    }
+    let currentInputWithdrawUsdcState = ctx.session!.currentInputWithdrawUsdcState;
+    if(currentInputWithdrawUsdcState) {
+      withdraw(ctx, text);
+      return;
+    }
     handleInputAmountOrPrice(ctx, text);
   });
 

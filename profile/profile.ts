@@ -4,7 +4,7 @@ import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import axios from "axios";
 import { formatString, formatUSDC, formatUSDCToString } from "../utils/utils";
-import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX } from "../utils/constant";
+import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX, PROFILE_WITHDRAW, PROFILE_DEPOSIT } from "../utils/constant";
 import { queryUserInfo } from "../utils/db";
 
 
@@ -67,12 +67,22 @@ function getProfileMenu() {
             callback_data: PROFILE_REFRESH_ASSETS
         }
     ], [
+        {
+            text: "Deposit usdc",
+            callback_data: PROFILE_DEPOSIT
+        }
+    ], [
+        {
+            text: "Withdraw usdc",
+            callback_data: PROFILE_WITHDRAW
+        }
+    ], [
         Markup.button.callback('↩︎ Back', BACK_TO_INDEX),
     ]]
 }
 
 
-async function queryCash(proxyWallet: string) {
+export async function queryCash(proxyWallet: string) {
     var provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
     var erc20Abi = [
         'function balanceOf(address) view returns(uint256)'
