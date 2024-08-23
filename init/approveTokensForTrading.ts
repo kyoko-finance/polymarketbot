@@ -4,8 +4,10 @@ import { safeAbi } from "../utils/polyUtils/abis/safeAbi";
 import { encodeErc1155Approve, encodeErc20Approve } from "../utils/polyUtils/encode";
 import { aggregateTransaction, signAndExecuteSafeTransaction } from "../utils/polyUtils/safe-helpers";
 import { OperationType, SafeTransaction } from "../utils/polyUtils/types";
+import UserInfo from "../schema/UserInfo";
 
 import 'dotenv/config';
+import { Context } from "telegraf";
 
 const CONDITIONAL_TOKENS_FRAMEWORK_ADDRESS = '0x4D97DCd97eC945f40cF65F87097ACe5EA0476045';
 const USDC_ADDRESS = process.env.USDCE;
@@ -18,17 +20,19 @@ const USDC_ADDRESS = process.env.USDCE;
 // USDC on the Neg Risk Exchange Contract
 // CTF Outcome Tokens on the CTF Exchange Contract
 // CTF Outcome Tokens on the Neg Risk Exchange Contract
-export async function approveTokensForTrading(privateKey: string, proxyWallet: string) {
+export async function approveTokensForTrading(ctx: Context, userId: string, privateKey: string, proxyWallet: string) {
     try {
-        const provider = new ethers.providers.JsonRpcProvider(`${process.env.RPC_POLYGON}`);
+        const provider = new ethers.providers.JsonRpcProvider(`${process.env.POLYGON_RPC}`);
         const pk = new ethers.Wallet(privateKey);
         const wallet = pk.connect(provider);
 
         console.log(`Address: ${wallet.address}`)
 
         const balance = await provider.getBalance(wallet.address);
+        console.log('balance:' + balance);
         if(balance.lt(1000000)) {
             console.log(`${wallet.address} 余额不足`)
+            ctx.reply("Your Matic is insufficient. You must approve tokens for securely trading.")
             return false;
         }
 
@@ -81,7 +85,13 @@ export async function approveTokensForTrading(privateKey: string, proxyWallet: s
         const txn = await signAndExecuteSafeTransaction(wallet, safe, safeTxn, { gasPrice: adjustedGasPrice });
 
         console.log(`Txn hash: ${txn.hash}`);
+
         await txn.wait();
+        let result = await UserInfo.findByIdAndUpdate(
+            userId,
+            { approved: true },
+            { new: true, runValidators: true }
+        );
         return true;
     } catch (error) {
         return false;

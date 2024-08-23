@@ -19,14 +19,18 @@ Your first polymarket trading bot
           `;
     //主页面
     ctx.replyWithMarkdownV2(indexMsg, { reply_markup: { inline_keyboard: getIndexMenu() }, disable_web_page_preview: true } as ExtraReplyMessage);
-    
+
     //approve
-    if(!userInfo) {
+    if (!userInfo) {
         userInfo = await queryUserInfo(ctx.from!.id.toString());
     }
-    if(userInfo != null && !(userInfo.approved)) {
+    if (userInfo != null && !(userInfo.approved)) {
         //进行approve
-        approveTokensForTrading(userInfo.userPrivatekey, userInfo.proxyWallet);
+        let pendingMessage = ctx.reply('Approving token for trading...')
+        let result: boolean = await approveTokensForTrading(ctx, userInfo._id, userInfo.userPrivatekey, userInfo.proxyWallet);
+        if (result) {
+            ctx.deleteMessage((await pendingMessage).message_id);
+        }
     }
 }
 

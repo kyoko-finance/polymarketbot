@@ -30,7 +30,7 @@ export function welcome(bot: Telegraf) {
 
         var telegramUserInfo = ctx.from;
         if (!userInfo) {
-            var randomWallet = await initUser(bot, ctx, telegramUserInfo);
+            var randomWallet = await showWelcomeMessageOnce(bot, ctx, telegramUserInfo);
             ctx.reply('Please wait while initializing user information...');
             await initUserPolymarketAccount(randomWallet, ctx, telegramUserInfo);
         }
@@ -80,7 +80,7 @@ async function initUserPolymarketAccount(randomWallet: any, ctx: Context, telegr
     await saveUserInfo(telegramUserInfo.id.toString(), randomWallet.address, randomWallet.privateKey, creds, proxyWallet);
 }
 
-async function initUser(bot: Telegraf, ctx: Context, telegramUserInfo: User) {
+async function showWelcomeMessageOnce(bot: Telegraf, ctx: Context, telegramUserInfo: User) {
     //generate new private key
     var randomWallet = generateRandomPrivateKey();
     console.log(randomWallet);
