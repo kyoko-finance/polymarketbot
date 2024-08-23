@@ -1,6 +1,6 @@
 import { BigNumber, ethers, Wallet } from 'ethers';
-import { IMarket } from '../pages/eventList';
-import { initClobClientGnosis } from '../pages/clobclientInit';
+import { IMarket } from '../event/eventList';
+import { initClobClientGnosis } from '../init/clobclientInit';
 
 
 

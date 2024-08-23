@@ -1,7 +1,7 @@
 
 import { Context, Telegraf, Markup } from "telegraf";
 import { MyContext } from "../index";
-import { initClobClientGnosis } from "./clobclientInit";
+import { initClobClientGnosis } from "../init/clobclientInit";
 import { Side, OrderType, UserOrder } from "@polymarket/clob-client";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import { isValidAmountOrPrice, validPrice } from "../utils/utils";

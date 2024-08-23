@@ -1,13 +1,13 @@
 import { ethers, BigNumber } from "ethers";
 import 'dotenv/config';
-import { IUserInfo } from "../schema/UserInfo";
+import { IUserInfo } from "../../schema/UserInfo";
 import { Context } from "telegraf";
-import { queryUserInfo } from "../utils/db";
+import { queryUserInfo } from "../../utils/db";
 import { updateProfile } from "./profile";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
-import { erc20Abi } from "../utils/polyUtils/abis/erc20Abi";
-import { MyContext } from "../index";
-import { isValidAmountOrPrice, isValidUSDCNumber } from "../utils/utils";
+import { erc20Abi } from "../../utils/polyUtils/abis/erc20Abi";
+import { MyContext } from "../../index";
+import { isValidAmountOrPrice, isValidUSDCNumber } from "../../utils/utils";
 
 
 export async function handleDeposit(ctx: MyContext) {

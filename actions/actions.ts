@@ -1,5 +1,5 @@
 import { Telegraf, session, Scenes, Context } from 'telegraf';
-import { showIndex } from './index';
+import { showIndex } from '../botIndexPage';
 import 'dotenv/config';
 import {
     WELCOME_DISMISS_GENERATE_WALLET, INDEX_PAGE_MARKETS, INDEX_PAGE_POSITIONS,
@@ -17,18 +17,18 @@ import {
     PROFILE_DEPOSIT,
     PROFILE_WITHDRAW
 } from "../utils/constant";
-import { showProfile, updateProfile } from '../profile/profile';
-import { showHistory } from './history';
-import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from './openOrders';
-import { showPositions } from './positions';
-import { showCategoryList, updateCategoryList } from './categoryList';
-import { showMarketOrLimitButton } from './Order';
-import { showTopicList } from './topicList';
+import { showProfile, updateProfile } from '../user/profile/profile';
+import { showHistory } from '../user/history';
+import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from '../user/openOrders';
+import { showPositions } from '../user/positions';
+import { showCategoryList, updateCategoryList } from '../event/categoryList';
+import { showMarketOrLimitButton } from '../order/Order';
+import { showTopicList } from '../event/topicList';
 import { MyContext } from '../index';
-import { showEventList } from './eventList';
-import { createOrder, showInputAmount } from './createOrder';
-import { deposit, handleDeposit } from '../profile/deposit';
-import { handleWithdraw } from '../profile/withdraw';
+import { showEventList } from '../event/eventList';
+import { createOrder, showInputAmount } from '../order/createOrder';
+import { deposit, handleDeposit } from '../user/profile/deposit';
+import { handleWithdraw } from '../user/profile/withdraw';
 
 
 

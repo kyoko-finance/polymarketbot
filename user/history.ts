@@ -28,10 +28,10 @@ async function queryHistoryShowMsg(ctx: Context) {
         if (index == 0) {
             showMsg += historyHeader;
         }
-        showMsg += `\n• Market: *${element.title}* 📈`
+        showMsg += `\n• Market: *${formatString(element.title)}* 📈`
         showMsg += `\n• Type: ${element.side}`;
         showMsg += `\n• Outcome: ${element.outcome}`
-        showMsg += `\n• Price: ${formatString(Math.round(element.price * 100).toString())}¢`
+        showMsg += `\n• Price: ${(Math.round(element.price * 100).toString())}¢`
         showMsg += `\n• Shares: ${Math.round(element.size)}`
         showMsg += `\n• Value: $${formatString(element.usdcSize.toFixed(2).toString())}`
         showMsg += `\n• Date: ${formatTimestampToString(element.timestamp)}`

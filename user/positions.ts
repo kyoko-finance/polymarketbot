@@ -5,7 +5,7 @@ import 'dotenv/config';
 import { BACK_TO_INDEX } from "../utils/constant";
 import { queryUserInfo } from "../utils/db";
 import { formatString } from "../utils/utils";
-import { IEvent } from "./eventList";
+import { IEvent } from "../event/eventList";
 import { MyContext } from '../index';
 
 

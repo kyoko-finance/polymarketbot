@@ -1,17 +1,16 @@
 import { Telegraf, Markup, Context } from "telegraf";
 import { generateRandomPrivateKey } from '../utils/utils';
 import UserInfo from "../schema/UserInfo";
-import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
-import { initClobClient, initClobClientEOA, initClobClientEmail, initClobClientGnosis } from "./clobclientInit";
+import { initClobClient } from "../init/clobclientInit";
 import 'dotenv/config';
 import { ApiKeyCreds } from "@polymarket/clob-client/dist/types";
-import { createProxyWallet } from "./generateProxyWallet";
+import { createProxyWallet } from "../init/generateProxyWallet";
 import { User } from "@telegraf/types";
 import { WELCOME_DISMISS_GENERATE_WALLET } from "../utils/constant";
-import { showIndex } from "./index";
-import { deleteStartMessageAndCancelOrder } from "./openOrders";
-import { showEventDetail } from "./eventDetail";
-import { showOrderBuyAndSellButton } from "./Order";
+import { showIndex } from "../botIndexPage";
+import { deleteStartMessageAndCancelOrder } from "../user/openOrders";
+import { showEventDetail } from "../event/eventDetail";
+import { showOrderBuyAndSellButton } from "../order/Order";
 
 
 

@@ -1,13 +1,13 @@
 import { Context, Telegraf, Markup } from "telegraf";
 import { MARKETS_ORDER_OP_BUY, MARKETS_ORDER_OP_SELL, MARKETS_ORDER_OP_MARKET, MARKETS_ORDER_OP_LIMIT } from "../utils/constant";
 import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types";
-import { IEvent, IMarket } from "./eventList";
+import { IEvent, IMarket } from "../event/eventList";
 import { MyContext } from "../index";
-import { initClobClientGnosis } from "./clobclientInit";
+import { initClobClientGnosis } from "../init/clobclientInit";
 import { BookParams } from "@polymarket/clob-client/dist/types";
 import { formatString, getYesOrNoTokenIdBySelect } from "../utils/utils";
 import axios from "axios";
-import { IPosition } from "./positions";
+import { IPosition } from "../user/positions";
 import { queryUserInfo } from "../utils/db";
 import { match } from "assert";
 

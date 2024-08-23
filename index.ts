@@ -1,15 +1,15 @@
 import { Telegraf, Markup, Context, session } from 'telegraf'
 import { message } from 'telegraf/filters'
 import { DBConnect, getInstance } from './utils/db';
-import { welcome } from './pages/welcome';
-import { actions } from './pages/actions';
+import { welcome } from './start/welcome';
+import { actions } from './actions/actions';
 import 'dotenv/config';
-import { IEvent, IMarket } from './pages/eventList';
-import { ICategory } from './pages/categoryList';
-import { handleInputAmountOrPrice } from './pages/createOrder';
-import { commands } from './pages/commands';
-import { deposit } from './profile/deposit';
-import { withdraw } from './profile/withdraw';
+import { IEvent, IMarket } from './event/eventList';
+import { ICategory } from './event/categoryList';
+import { handleInputAmountOrPrice } from './order/createOrder';
+import { commands } from './commands/commands';
+import { deposit } from './user/profile/deposit';
+import { withdraw } from './user/profile/withdraw';
 
 
 interface SessionData {

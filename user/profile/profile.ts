@@ -3,9 +3,9 @@ import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import axios from "axios";
-import { formatString, formatUSDC, formatUSDCToString } from "../utils/utils";
-import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX, PROFILE_WITHDRAW, PROFILE_DEPOSIT } from "../utils/constant";
-import { queryUserInfo } from "../utils/db";
+import { formatString, formatUSDC, formatUSDCToString } from "../../utils/utils";
+import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX, PROFILE_WITHDRAW, PROFILE_DEPOSIT } from "../../utils/constant";
+import { queryUserInfo } from "../../utils/db";
 
 
 

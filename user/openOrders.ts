@@ -1,7 +1,7 @@
 import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage, ExtraEditMessageText } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
-import { initClobClientGnosis } from "./clobclientInit";
+import { initClobClientGnosis } from "../init/clobclientInit";
 import { formatExpiration, formatString } from "../utils/utils";
 import { OPEN_ORDERS_REFRESH, BACK_TO_INDEX } from "../utils/constant";
 import axios from "axios";

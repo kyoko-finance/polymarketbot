@@ -1,5 +1,5 @@
 import { Telegraf, Markup, Context, session } from 'telegraf'
-import { showCategoryList } from './categoryList';
+import { showCategoryList } from '../event/categoryList';
 
 
 export function commands(bot: Telegraf) {
