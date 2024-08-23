@@ -1,9 +1,9 @@
 import { ClobClient } from "@polymarket/clob-client";
 import { SignatureType } from "@polymarket/order-utils";
-import { queryUserInfo } from "./utils/db";
+import { queryUserInfo } from "../utils/db";
 import { ethers } from "ethers";
 import 'dotenv/config';
-import UserInfo, { IUserInfo } from './schema/UserInfo';
+import UserInfo, { IUserInfo } from '../schema/UserInfo';
 
 var host = process.env.CLOB_HOST;
 const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);

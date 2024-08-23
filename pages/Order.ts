@@ -3,7 +3,7 @@ import { MARKETS_ORDER_OP_BUY, MARKETS_ORDER_OP_SELL, MARKETS_ORDER_OP_MARKET, M
 import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import { IEvent, IMarket } from "./eventList";
 import { MyContext } from "../index";
-import { initClobClientGnosis } from "../clobclientInit";
+import { initClobClientGnosis } from "./clobclientInit";
 import { BookParams } from "@polymarket/clob-client/dist/types";
 import { formatString, getYesOrNoTokenIdBySelect } from "../utils/utils";
 import axios from "axios";

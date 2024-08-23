@@ -25,10 +25,10 @@ Your first polymarket trading bot
         userInfo = await queryUserInfo(ctx.from!.id.toString());
     }
     if(userInfo != null && !(userInfo.approved)) {
-        let result: boolean = await approveAllowance(ctx);
-        if(!result) {
-            ctx.reply('Tip: you should top up some matic for approve action and some USDC.e for transactions.')
-        }
+        // let result: boolean = await approveAllowance(ctx);
+        // if(!result) {
+        //     ctx.reply('Tip: you should top up some matic for approve action and some USDC.e for transactions.')
+        // }
     }
 }
 

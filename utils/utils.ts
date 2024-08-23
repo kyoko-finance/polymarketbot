@@ -1,8 +1,7 @@
 import { BigNumber, ethers, Wallet } from 'ethers';
 import { IMarket } from '../pages/eventList';
-import { initClobClientGnosis } from '../clobclientInit';
-import { IOrderBook } from '../pages/Order';
-import { BookParams, ClobClient } from "@polymarket/clob-client";
+import { initClobClientGnosis } from '../pages/clobclientInit';
+
 
 
 export function generateRandomPrivateKey() {
