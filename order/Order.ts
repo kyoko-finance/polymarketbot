@@ -10,6 +10,8 @@ import axios from "axios";
 import { IPosition } from "../user/positions";
 import { queryUserInfo } from "../utils/db";
 import { match } from "assert";
+import { queryCash } from "../user/profile/profile";
+import { BigNumber } from "ethers";
 
 
 /**
@@ -45,6 +47,7 @@ export async function showOrderBuyAndSellButton(ctx: MyContext, params: string) 
     })
 
     if (!event || !market) {
+        ctx.reply('It has expired. Please re-select the event.');
         return;
     }
 
@@ -162,6 +165,11 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     let selectedYesOrNo = ctx.session?.selectedYesOrNo;
     let groupItemTitle = selectedMarket?.groupItemTitle;
 
+    var userInfo = await queryUserInfo(ctx.from!.id.toString());
+    if (!userInfo) {
+        return;
+    }
+
     let orderTypeMsg = '';
     let tempMsg = '';
     if (groupItemTitle && groupItemTitle.length > 0) {
@@ -173,6 +181,12 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
         tempMsg += `No\\-`;
     }
     if (buyOrSell === '0') {
+        //余额
+        let cash: BigNumber = await queryCash(userInfo.proxyWallet);
+        if(cash.lt(1e6)) {
+            ctx.reply('Your proxy wallet cash is insufficient. ')
+            return;
+        }
         tempMsg += 'Buy';
     } else {
         tempMsg += 'Sell';
@@ -185,10 +199,6 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
 
     //如果是sell则查询当前选中的market的Shares
     if (buyOrSell == '1') {
-        var userInfo = await queryUserInfo(ctx.from!.id.toString());
-        if (!userInfo) {
-            return;
-        }
         var selectTokenId = await getYesOrNoTokenIdBySelect(ctx.from!.id.toString(), selectedMarket!.clobTokenIds, selectedYesOrNo!);
         var positionList: IPosition[] | null = await getPositionsApi(userInfo.proxyWallet);
         let exist = false;
@@ -201,7 +211,7 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
                 }
             });
         }
-        if(!exist) {
+        if (!exist) {
             ctx.reply('You have no position.');
             return;
         }

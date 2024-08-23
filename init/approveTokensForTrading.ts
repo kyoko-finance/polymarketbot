@@ -31,8 +31,8 @@ export async function approveTokensForTrading(ctx: Context, userId: string, priv
         const balance = await provider.getBalance(wallet.address);
         console.log('balance:' + balance);
         if(balance.lt(1000000)) {
-            console.log(`${wallet.address} 余额不足`)
-            ctx.reply("Your Matic is insufficient. You must approve tokens for securely trading.")
+            // console.log(`${wallet.address} 余额不足`)
+            ctx.reply("Your Matic is insufficient. You must approve tokens for securely trading❗❗❗")
             return false;
         }
 

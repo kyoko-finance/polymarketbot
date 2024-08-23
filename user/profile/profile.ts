@@ -95,7 +95,7 @@ export async function queryCash(proxyWallet: string) {
     var usdceBalanceOf = await USDCEContract.balanceOf(proxyWallet);
     // console.log('usdc.e:', usdceBalanceOf.toString());
 
-    return usdcBalanceOf.add(usdceBalanceOf);
+    return usdcBalanceOf.add(usdceBalanceOf) as BigNumber;
 }
 
 async function queryCurrentPositionVaule(proxyWallet: string) {

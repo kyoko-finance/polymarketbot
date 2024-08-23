@@ -30,7 +30,13 @@ export async function handleInputAmountOrPrice(ctx: MyContext, text: string) {
                 console.log('input amount error');
                 return;
             }
-            await ctx.reply('✅The amount you entered is: ' + text);
+            let selectedBuyOrSell = ctx.session?.selectedBuyOrSell;
+            if(selectedBuyOrSell == '0') {
+                //buy
+                await ctx.reply('✅The amount you entered is: $' + text);
+            } else {
+                await ctx.reply('✅The shares you entered is: ' + text);
+            }
             createOrder(ctx, selectedMarketOrLimit, Number(inputAmount), Number(inputPrice))
         } else {
             //限价单执行
@@ -78,8 +84,8 @@ export function showInputAmount(ctx: MyContext, marketOrLimit: string, messageId
     let palceHolderMsg = 'Please Input shares';
     //市价单&buy,直接输入购买金额
     if (marketOrLimit == '0' && selectedBuyOrSell == '0') {
-        replyMsg = 'Please input amount:';
-        palceHolderMsg = 'Please Input amount'
+        replyMsg = 'Please input amount($):';
+        palceHolderMsg = 'Please Input amount($)'
     }
     ctx.reply(replyMsg, {
         reply_to_message_id: messageId,

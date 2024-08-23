@@ -82,7 +82,7 @@ function topicListActions(bot: Telegraf) {
         // go to event list
         let topicList = (ctx as MyContext).session?.topicList;
         if (topicList == null || topicList.length == 0) {
-            ctx.reply('Topic list is empty\\.');
+            ctx.reply('Topic list is empty.');
             return;
         }
         // let category = (ctx as MyContext).session!.selectedCategory;

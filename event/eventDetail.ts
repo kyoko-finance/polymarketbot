@@ -13,12 +13,14 @@ export function showEventDetail(ctx: MyContext, id: string) {
     ctx.deleteMessage();
     // console.log('event detail id:', id);
     if (!ctx.session) {
+        console.log('session is empty.')
         return;
     }
     let eventList: IEvent[] | undefined = ctx.session.selectedEventList;
     // console.log('session中的eventList length:', eventList.length);
 
     if (!eventList || eventList.length == 0) {
+        ctx.reply('event list is empty.')
         return;
     }
     let event: IEvent | undefined;
