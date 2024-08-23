@@ -79,9 +79,6 @@ async function initUserPolymarketAccount(randomWallet: any, ctx: Context, telegr
     }
     //save to db
     await saveUserInfo(telegramUserInfo.id.toString(), randomWallet.address, randomWallet.privateKey, creds, proxyWallet);
-
-    //approve,一开始没有matic，所以这里一定失败
-    // await approveAllowance(ctx);
 }
 
 async function initUser(bot: Telegraf, ctx: Context, telegramUserInfo: User) {

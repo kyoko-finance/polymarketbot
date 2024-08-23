@@ -15,7 +15,7 @@ import {
     MARKETS_BACK_TO_TOPIC,
     MARKETS_BACK_TO_INDEX
 } from "../utils/constant";
-import { showProfile, updateProfile } from './profile';
+import { showProfile, updateProfile } from '../profile/profile';
 import { showHistory } from './history';
 import { showOpenOrders, updateOpenOrders, deleteOpenOrderMap } from './openOrders';
 import { showPositions } from './positions';

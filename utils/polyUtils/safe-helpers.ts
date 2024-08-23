@@ -2,8 +2,10 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { BigNumber, Contract, ethers, Wallet } from "ethers";
 import { SafeTransaction, OperationType } from "./types";
 import { Interface } from "ethers/lib/utils";
-import { multisendAbi } from "./multisendAbi";
+import { multisendAbi } from "./abis/multisendAbi"
 
+
+const SAFE_MULTISEND_ADDRESS = '0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761';
 
 const SAFE_MULTISEND_INTERFACE = new Interface(multisendAbi);
 
@@ -107,7 +109,7 @@ const createSafeMultisendTransaction = (txns: SafeTransaction[]): SafeTransactio
     ]);
 
     return {
-        to: '0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761',
+        to: SAFE_MULTISEND_ADDRESS,
         value: "0",
         data: data,
         operation: OperationType.DelegateCall,

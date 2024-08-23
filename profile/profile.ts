@@ -2,7 +2,6 @@ import { BigNumber, ethers } from "ethers";
 import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
-import UserInfo, { IUserInfo } from "../schema/UserInfo";
 import axios from "axios";
 import { formatString, formatUSDC, formatUSDCToString } from "../utils/utils";
 import { PROFILE_REFRESH_ASSETS, BACK_TO_INDEX } from "../utils/constant";

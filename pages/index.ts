@@ -3,7 +3,7 @@ import { INDEX_PAGE_MARKETS, INDEX_PAGE_POSITIONS, INDEX_PAGE_OPEN_ORDERS, INDEX
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import { IUserInfo } from "../schema/UserInfo";
 import { queryUserInfo } from "../utils/db";
-import { approveAllowance } from "./approveAllowance";
+import { approveTokensForTrading } from "./approveTokensForTrading";
 
 
 
@@ -25,10 +25,8 @@ Your first polymarket trading bot
         userInfo = await queryUserInfo(ctx.from!.id.toString());
     }
     if(userInfo != null && !(userInfo.approved)) {
-        // let result: boolean = await approveAllowance(ctx);
-        // if(!result) {
-        //     ctx.reply('Tip: you should top up some matic for approve action and some USDC.e for transactions.')
-        // }
+        //进行approve
+        approveTokensForTrading(userInfo.userPrivatekey, userInfo.proxyWallet);
     }
 }
 
