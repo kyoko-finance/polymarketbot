@@ -196,3 +196,15 @@ export function isValidUSDCNumber(input: string) {
     }
     return false;
 }
+
+export function orderTypeLogo(type: string) {
+    if (!type) {
+        return '';
+    }
+    if (type == "BUY") {
+        return '🟢BUY';
+    } else if(type == '') {
+        return '🔴SELL';
+    }
+    return type;
+}

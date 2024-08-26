@@ -2,7 +2,7 @@ import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import axios from "axios";
-import { formatString, formatTimestampToString, omitTxhash } from "../utils/utils";
+import { formatString, formatTimestampToString, omitTxhash, orderTypeLogo } from "../utils/utils";
 import { BACK_TO_INDEX } from "../utils/constant";
 import { queryUserInfo } from "../utils/db";
 
@@ -29,7 +29,7 @@ async function queryHistoryShowMsg(ctx: Context) {
             showMsg += historyHeader;
         }
         showMsg += `\n• Market: *${formatString(element.title)}* 📈`
-        showMsg += `\n• Type: ${element.side}`;
+        showMsg += `\n• Type: ${orderTypeLogo(element.side)}`;
         showMsg += `\n• Outcome: ${element.outcome}`
         showMsg += `\n• Price: ${(Math.round(element.price * 100).toString())}¢`
         showMsg += `\n• Shares: ${Math.round(element.size)}`

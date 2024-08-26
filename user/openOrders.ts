@@ -2,7 +2,7 @@ import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage, ExtraEditMessageText } from "telegraf/typings/telegram-types";
 import 'dotenv/config';
 import { initClobClientGnosis } from "../init/clobclientInit";
-import { formatExpiration, formatString } from "../utils/utils";
+import { formatExpiration, formatString, orderTypeLogo } from "../utils/utils";
 import { OPEN_ORDERS_REFRESH, BACK_TO_INDEX } from "../utils/constant";
 import axios from "axios";
 
@@ -60,11 +60,11 @@ async function getShowMsg(ctx: Context, openOrderList: IOpenOrder[] | null) {
         console.log('cancelOrderUrl:', cancelOrderUrl);
 
         showMsg += `\n• Market: [${formatString(market[0].question)}](https://polymarket.com/event/${market[0].event_slug}/${market[0].market_slug}) 📈`
-        showMsg += `\n• Side: ${element.side}`;
+        showMsg += `\n• Side: ${orderTypeLogo(element.side)}`;
         showMsg += `\n• Outcome: ${element.outcome}`
         showMsg += `\n• Operation: [\\[Cancel\\]](${cancelOrderUrl})`
         showMsg += `\n• Price: ${formatString(Math.round(parseFloat(element.price) * 100).toString())}¢`
-        showMsg += `\n• Filled: ${element.size_matched} / ${element.original_size}`
+        showMsg += `\n• Filled: ${formatString(element.size_matched)} / ${formatString(element.original_size)}`
         showMsg += `\n• Total: $${formatString(total.toString())}`
         showMsg += `\n• Expiration: ${formatExpiration(element.expiration)}`
         showMsg += `\n`;
