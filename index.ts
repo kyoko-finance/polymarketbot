@@ -10,6 +10,7 @@ import { handleInputAmountOrPrice } from './order/createOrder';
 import { commands } from './commands/commands';
 import { deposit } from './user/profile/deposit';
 import { withdraw } from './user/profile/withdraw';
+import { IPosition } from './user/positions';
 
 
 interface SessionData {
@@ -21,16 +22,17 @@ interface SessionData {
   selectedEventList: IEvent[];
   selectedEvent: IEvent;
   selectedMarket: IMarket;
-  selectedYesOrNo: string;
+  selectedYesOrNo: string | undefined;
   selectedBuyOrSell: string | undefined;
-  selectedMarketOrLimit: string;
+  selectedMarketOrLimit: string | undefined;
 
   // orderBook: IOrderBook[] | undefined;
   currentInputAmountState: boolean;
   currentInputPriceState: boolean;
-  currentInputMessageId: number;
+  currentInputMessageId: number | undefined;
   inputAmount: string | undefined;
-  inputPrice: string | undefined;
+  // inputPrice: string | undefined;
+  selectedSellPosition: IPosition | undefined;
 
   currentInputDepositUsdcState: boolean;
   currentInputWithdrawUsdcState: boolean;

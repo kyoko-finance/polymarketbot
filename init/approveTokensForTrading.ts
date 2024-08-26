@@ -36,6 +36,8 @@ export async function approveTokensForTrading(ctx: Context, userId: string, priv
             return false;
         }
 
+        let pendingMessage = ctx.reply('Approve transaction is pending...');
+
         // Safe
         const safe = new ethers.Contract(proxyWallet, safeAbi, wallet);
 
@@ -85,6 +87,9 @@ export async function approveTokensForTrading(ctx: Context, userId: string, priv
         const txn = await signAndExecuteSafeTransaction(wallet, safe, safeTxn, { gasPrice: adjustedGasPrice });
 
         console.log(`Txn hash: ${txn.hash}`);
+
+        ctx.deleteMessage((await pendingMessage).message_id);
+        ctx.reply('Approve success.')
 
         await txn.wait();
         let result = await UserInfo.findByIdAndUpdate(

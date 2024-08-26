@@ -15,7 +15,11 @@ import {
     MARKETS_BACK_TO_TOPIC,
     MARKETS_BACK_TO_INDEX,
     PROFILE_DEPOSIT,
-    PROFILE_WITHDRAW
+    PROFILE_WITHDRAW,
+    CREATE_ORDER_SELL_25_PERCENT,
+    CREATE_ORDER_SELL_50_PERCENT,
+    CREATE_ORDER_SELL_75_PERCENT,
+    CREATE_ORDER_SELL_100_PERCENT,
 } from "../utils/constant";
 import { showProfile, updateProfile } from '../user/profile/profile';
 import { showHistory } from '../user/history';
@@ -26,7 +30,7 @@ import { showMarketOrLimitButton } from '../order/Order';
 import { showTopicList } from '../event/topicList';
 import { MyContext } from '../index';
 import { showEventList } from '../event/eventList';
-import { createOrder, showInputAmount } from '../order/createOrder';
+import { afterSelectPercentButton, createOrder, showInputAmount } from '../order/createOrder';
 import { deposit, handleDeposit } from '../user/profile/deposit';
 import { handleWithdraw } from '../user/profile/withdraw';
 
@@ -46,6 +50,23 @@ export function actions(bot: Telegraf) {
     categoryListActions(bot);
     topicListActions(bot);
     eventListActions(bot);
+    orderSellPercentActions(bot);
+}
+
+function orderSellPercentActions(bot: Telegraf) {
+    bot.action(CREATE_ORDER_SELL_25_PERCENT, async (ctx: Context) => {
+        afterSelectPercentButton(ctx, 0.25);
+    });
+    bot.action(CREATE_ORDER_SELL_50_PERCENT, async (ctx: Context) => {
+        afterSelectPercentButton(ctx, 0.5);
+
+    });
+    bot.action(CREATE_ORDER_SELL_75_PERCENT, async (ctx: Context) => {
+        afterSelectPercentButton(ctx, 0.75);
+    });
+    bot.action(CREATE_ORDER_SELL_100_PERCENT, async (ctx: Context) => {
+        afterSelectPercentButton(ctx, 1);
+    });
 }
 
 function categoryListActions(bot: Telegraf) {

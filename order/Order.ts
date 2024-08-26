@@ -165,6 +165,7 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     let selectedYesOrNo = ctx.session?.selectedYesOrNo;
     let groupItemTitle = selectedMarket?.groupItemTitle;
 
+
     var userInfo = await queryUserInfo(ctx.from!.id.toString());
     if (!userInfo) {
         return;
@@ -183,7 +184,7 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
     if (buyOrSell === '0') {
         //余额
         let cash: BigNumber = await queryCash(userInfo.proxyWallet);
-        if(cash.lt(1e6)) {
+        if (cash.lt(1e6)) {
             ctx.reply('Your proxy wallet cash is insufficient. ')
             return;
         }
@@ -206,17 +207,18 @@ export async function showMarketOrLimitButton(ctx: MyContext, buyOrSell: string)
             positionList.forEach(element => {
                 // console.log("每一个element的id是", element.asset);
                 if (element.asset === selectTokenId) {
+                    ctx.session!.selectedSellPosition = element;
                     exist = true;
-                    orderTypeMsg += `\n_Your current market position: ${formatString(element.size.toFixed(2))} • ${Math.round(element.avgPrice * 100)}¢_\n`;
+                    orderTypeMsg += `\n_Your current market position: ${formatString(element.size.toString())} • ${Math.round(element.avgPrice * 100)}¢_\n`;
                 }
             });
         }
         if (!exist) {
+            ctx.session!.selectedSellPosition = undefined;
             ctx.reply('You have no position.');
             return;
         }
     }
-
 
     orderTypeMsg += '\n*3\\. Please select order type: *\n';
     orderTypeMsg += `_Tip: Minimum 5 shares for limit orders_`;

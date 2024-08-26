@@ -47,3 +47,12 @@ export const MARKETS_ORDER_OP_SELL = 'markets_order_op_sell';
 export const MARKETS_ORDER_OP_MARKET = 'markets_order_op_market';
 
 export const MARKETS_ORDER_OP_LIMIT = 'markets_order_op_limit';
+
+
+export const CREATE_ORDER_SELL_25_PERCENT = 'create_order_sell_25_percent';
+
+export const CREATE_ORDER_SELL_50_PERCENT = 'create_order_sell_50_percent';
+
+export const CREATE_ORDER_SELL_75_PERCENT = 'create_order_sell_75_percent';
+
+export const CREATE_ORDER_SELL_100_PERCENT = 'create_order_sell_100_percent';
