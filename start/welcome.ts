@@ -1,5 +1,5 @@
 import { Telegraf, Markup, Context } from "telegraf";
-import { generateRandomPrivateKey } from '../utils/utils';
+import { formatString, generateRandomPrivateKey } from '../utils/utils';
 import UserInfo from "../schema/UserInfo";
 import { initClobClient } from "../init/clobclientInit";
 import 'dotenv/config';
@@ -91,7 +91,7 @@ async function showWelcomeMessageOnce(bot: Telegraf, ctx: Context, telegramUserI
 
     let showContent =
         `
-      👋 Welcome to Ploy${telegramUserInfo.first_name}\\!
+      👋 Welcome to Ploy${formatString(telegramUserInfo.first_name)}\\!
       \nA new wallet has been generated for you\\. *Save the private key below❗*
       \n*address:*${randomWallet.address}
       \n*PK:*${randomWallet.privateKey}

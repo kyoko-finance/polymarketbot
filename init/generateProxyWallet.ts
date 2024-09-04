@@ -3,9 +3,9 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import 'dotenv/config';
 import axios from "axios";
 
+const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
 
 async function generateSignature(privateKey: string) {
-  const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
   const wallet = new ethers.Wallet(privateKey, provider);
 
   const domain = {
@@ -32,16 +32,61 @@ async function generateSignature(privateKey: string) {
   return sig;
 }
 
+export async function createProxyWalletDeprecated(address: string, privateKey: string) {
+  try {
+    const proxyWallet = await axios.post('https://matic-gsn-v2-2.polymarket.io/create-safe-proxy', {
+      paymentToken: '0x0000000000000000000000000000000000000000',
+      payment: '0x00',
+      paymentReceiver: '0x0000000000000000000000000000000000000000',
+      signature: await generateSignature(privateKey)
+    });
+    console.log("-----------请求结果start-----------------")
+    console.log(proxyWallet);
+    console.log("-----------请求结果end-----------------")
+    if (proxyWallet.status == 200) {
+      return await queryProxyWallet(address);
+    }
+  } catch (error) {
+    console.log("创建proxyWallet发生了错误");
+    console.log(error);
+    console.log("上面是错误内容");
+  }
+}
+
 export async function createProxyWallet(address: string, privateKey: string) {
-  const proxyWallet = await axios.post('https://matic-gsn-v2-2.polymarket.io/create-safe-proxy', {
-    paymentToken: '0x0000000000000000000000000000000000000000',
-    payment: '0x00',
-    paymentReceiver: '0x0000000000000000000000000000000000000000',
-    signature: await generateSignature(privateKey)
-  });
-  // console.log(proxyWallet);
-  if (proxyWallet.status == 200) {
-    return await queryProxyWallet(address);
+  try {
+    const signer = new ethers.Wallet(privateKey, provider);
+    const contractAddress = process.env.GNOSIS_SAFE_FACTORY as string;
+
+    const paymentToken = '0x0000000000000000000000000000000000000000';
+    const payment = '0x0';
+    const paymentReceiver = '0x0000000000000000000000000000000000000000';
+
+    const abi = [
+      "function createProxy(address paymentToken, uint256 payment, address payable paymentReceiver, (uint8 v, bytes32 r, bytes32 s) createSig) public"
+    ];
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+    // 计算gasPrice, 例如: 设置为50 Gwei
+    const gasPrice = await provider.getGasPrice();
+
+    let sig = await generateSignature(privateKey);
+
+    // Split the signature into r, s, and v
+    const signature = ethers.utils.splitSignature(sig);
+    const createSig = {
+      v: signature.v,
+      r: signature.r,
+      s: signature.s
+    };
+
+    const tx = await contract.createProxy(paymentToken, payment, paymentReceiver, createSig, { gasPrice: gasPrice.mul(12).div(10) });
+    console.log('Transaction hash:', tx.hash);
+
+    // 等待交易完成
+    const receipt = await tx.wait();
+    console.log('Transaction was mined in block:', receipt.blockNumber);
+  } catch (error) {
+    console.error('Error calling createProxy:', error);
   }
 }
 
