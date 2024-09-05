@@ -11,6 +11,7 @@ import { showIndex } from "../botIndexPage";
 import { deleteStartMessageAndCancelOrder } from "../user/openOrders";
 import { showEventDetail } from "../event/eventDetail";
 import { showOrderBuyAndSellButton } from "../order/Order";
+import { encryptUserPrivateKey } from "../utils/decrypt";
 
 
 
@@ -117,7 +118,7 @@ async function saveUserInfo(id: string, userAddress: string, userPrivateKey: str
     let userInfo = new UserInfo({
         _id: id,
         userAddress: userAddress,
-        userPrivatekey: userPrivateKey,
+        userPrivatekey: await encryptUserPrivateKey(userPrivateKey),
         clobApiKey: creds.key,
         clobSecret: creds.secret,
         clobPassPhrase: creds.passphrase,

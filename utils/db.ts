@@ -1,5 +1,6 @@
 import mongoose, { Mongoose } from 'mongoose';
 import UserInfo, { IUserInfo } from '../schema/UserInfo';
+import { decryptUserPrivateKey } from './decrypt';
 
 // 声明一个变量来存储 Mongoose 实例
 let DBInstance: Mongoose | null = null;
@@ -36,6 +37,8 @@ export async function queryUserInfo(id: string) {
     if (userInfo == null) {
         return;
     }
-    console.log("queryUserInfo:", userInfo)
+    let privateKey = await decryptUserPrivateKey(userInfo.userPrivatekey);
+    userInfo.userPrivatekey = privateKey;
+    console.log("queryUserInfo结果:", userInfo)
     return userInfo;
 }
