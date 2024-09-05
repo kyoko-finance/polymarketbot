@@ -4,7 +4,7 @@ import UserInfo from "../schema/UserInfo";
 import { initClobClient } from "../init/clobclientInit";
 import 'dotenv/config';
 import { ApiKeyCreds } from "@polymarket/clob-client/dist/types";
-import { createProxyWallet } from "../init/generateProxyWallet";
+import { createProxyWallet, queryProxyWallet } from "../init/generateProxyWallet";
 import { User } from "@telegraf/types";
 import { WELCOME_DISMISS_GENERATE_WALLET } from "../utils/constant";
 import { showIndex } from "../botIndexPage";
@@ -32,7 +32,7 @@ export function welcome(bot: Telegraf) {
         if (!userInfo) {
             var randomWallet = await showWelcomeMessageOnce(bot, ctx, telegramUserInfo);
             ctx.reply('Please wait while initializing user information...');
-            await initUserPolymarketAccount(randomWallet, ctx, telegramUserInfo);
+            await firstTimeInitUserPolymarketAccount(randomWallet, ctx, telegramUserInfo);
         }
         showIndex(ctx, userInfo);
     })
@@ -64,12 +64,12 @@ function handlePayload(ctx: Context, payload: string) {
 }
 
 
-async function initUserPolymarketAccount(randomWallet: any, ctx: Context, telegramUserInfo: User) {
+async function firstTimeInitUserPolymarketAccount(randomWallet: any, ctx: Context, telegramUserInfo: User) {
     //createApiKey
     var creds = await createApiKey(randomWallet.privateKey);
 
     //generate proxy wallet
-    var proxyWallet = await createProxyWallet(randomWallet.address, randomWallet.privateKey);
+    var proxyWallet = await queryProxyWallet(randomWallet.address);
 
     //exception
     if (!randomWallet || !creds || !proxyWallet) {

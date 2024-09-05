@@ -4,6 +4,8 @@ import { ExtraReplyMessage } from "telegraf/typings/telegram-types";
 import { IUserInfo } from "./schema/UserInfo";
 import { queryUserInfo } from "./utils/db";
 import { approveTokensForTrading } from "./init/approveTokensForTrading";
+import { createProxyWallet, getBalance } from "./init/generateProxyWallet";
+import { BigNumber } from "ethers";
 
 
 
@@ -20,13 +22,39 @@ Your first polymarket trading bot
     //主页面
     ctx.replyWithMarkdownV2(indexMsg, { reply_markup: { inline_keyboard: getIndexMenu() }, disable_web_page_preview: true } as ExtraReplyMessage);
 
+    await initUserProxyWalletAndApprove(ctx, userInfo);
+}
+
+async function initUserProxyWalletAndApprove(ctx: Context, userInfo: IUserInfo | undefined) {
     //approve
     if (!userInfo) {
         userInfo = await queryUserInfo(ctx.from!.id.toString());
     }
-    if (userInfo != null && !(userInfo.approved)) {
-        //进行approve
-        let pendingMessage = ctx.reply('Approving token for trading...')
+    if (!userInfo) {
+        return;
+    }
+    if(userInfo.generateProxyWallet && userInfo.approved) {
+        //已经完成初始化操作
+        return;
+    }
+
+    let balance: BigNumber = await getBalance(userInfo.userAddress);
+    if (balance.lt(1000000)) {
+        // console.log(`${wallet.address} 余额不足`)
+        ctx.reply("Your Matic is insufficient. You must topup some matic for securely trading❗❗❗")
+        return;
+    }
+
+    //当确认有matic时才执行下面这段代码
+    if (!(userInfo.generateProxyWallet)) {
+        let pendingMessage = ctx.reply('generate proxy wallet for trading...');
+        let result: boolean = await createProxyWallet(ctx, userInfo._id, userInfo.userAddress, userInfo.userPrivatekey);
+        if (result) {
+            ctx.deleteMessage((await pendingMessage).message_id);
+        }
+    }
+    if (!(userInfo.approved)) {
+        let pendingMessage = ctx.reply('Approving token for trading...');
         let result: boolean = await approveTokensForTrading(ctx, userInfo._id, userInfo.userPrivatekey, userInfo.proxyWallet);
         if (result) {
             ctx.deleteMessage((await pendingMessage).message_id);

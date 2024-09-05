@@ -93,6 +93,10 @@ function getOrderBookMsg(orderBookList: IOrderBook[], yesOrNo: string) {
     } else {
         orderBook = orderBookList[1];
     }
+    if(!orderBook) {
+        console.log('orderBook is null,', orderBook);
+        return 'orderBook error';
+    }
     let asks = orderBook.asks.slice(-4);
     // console.log("最新asks:", asks);
     let bids = orderBook.bids.slice(-4).reverse();

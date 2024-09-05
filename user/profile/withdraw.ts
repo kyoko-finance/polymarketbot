@@ -75,7 +75,7 @@ export async function withdraw(ctx: MyContext, withdrawAmount: string) {
     // Transfers an ERC20 token out of the Safe to the destination address
     const data = encodeErc20Transfer(destAddress, withdrawAmountInWei);
 
-    let pendingMessage = await ctx.reply('transcation is pending...');
+    let pendingMessage = await ctx.reply('Transcation is pending...');
     ctx.session!.currentInputWithdrawUsdcState = false;
 
     const gasPrice = await provider.getGasPrice();

@@ -2,6 +2,8 @@ import { ethers } from "ethers";
 import { JsonRpcProvider } from '@ethersproject/providers';
 import 'dotenv/config';
 import axios from "axios";
+import UserInfo from "../schema/UserInfo";
+import { Context } from "telegraf";
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
 
@@ -53,7 +55,13 @@ export async function createProxyWalletDeprecated(address: string, privateKey: s
   }
 }
 
-export async function createProxyWallet(address: string, privateKey: string) {
+export async function getBalance(address: string) {
+  const balance = await provider.getBalance(address);
+  console.log('balance:' + balance);
+  return balance;
+}
+
+export async function createProxyWallet(ctx: Context, userId: string, address: string, privateKey: string) {
   try {
     const signer = new ethers.Wallet(privateKey, provider);
     const contractAddress = process.env.GNOSIS_SAFE_FACTORY as string;
@@ -61,6 +69,8 @@ export async function createProxyWallet(address: string, privateKey: string) {
     const paymentToken = '0x0000000000000000000000000000000000000000';
     const payment = '0x0';
     const paymentReceiver = '0x0000000000000000000000000000000000000000';
+
+    let pendingMessage = ctx.reply('Approve transaction is pending...');
 
     const abi = [
       "function createProxy(address paymentToken, uint256 payment, address payable paymentReceiver, (uint8 v, bytes32 r, bytes32 s) createSig) public"
@@ -85,13 +95,24 @@ export async function createProxyWallet(address: string, privateKey: string) {
     // 等待交易完成
     const receipt = await tx.wait();
     console.log('Transaction was mined in block:', receipt.blockNumber);
+
+    ctx.deleteMessage((await pendingMessage).message_id);
+    ctx.reply('Create proxy wallet success.')
+    //更新generateProxyWallet
+    let result = await UserInfo.findByIdAndUpdate(
+      userId,
+      { generateProxyWallet: true },
+      { new: true, runValidators: true }
+    );
+    return true;
   } catch (error) {
     console.error('Error calling createProxy:', error);
+    return false;
   }
 }
 
 
-async function queryProxyWallet(address: string) {
+export async function queryProxyWallet(address: string) {
   const provider = new ethers.providers.JsonRpcProvider(process.env.POLYGON_RPC);
 
   const abi = [

@@ -62,7 +62,7 @@ export async function deposit(ctx: MyContext, amountInUSDC: string) {
         "function transfer(address to, uint256 amount) public returns (bool)"
     ];
 
-    let pendingMessage = await ctx.reply('transcation is pending...');
+    let pendingMessage = await ctx.reply('Transcation is pending...');
 
     ctx.session!.currentInputDepositUsdcState = false;
 

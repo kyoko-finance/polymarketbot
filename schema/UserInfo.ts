@@ -10,6 +10,7 @@ export interface IUserInfo {
   clobPassPhrase: string;
   proxyWallet: string;
   approved: boolean;
+  generateProxyWallet: boolean;
 }
 
 const UserInfoSchema: Schema = new mongoose.Schema({
@@ -24,6 +25,7 @@ const UserInfoSchema: Schema = new mongoose.Schema({
   clobPassPhrase: String,
   proxyWallet: String,
   approved: Boolean,
+  generateProxyWallet: Boolean
 });
 
 
