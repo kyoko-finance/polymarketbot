@@ -47,17 +47,25 @@ async function initUserProxyWalletAndApprove(ctx: Context, userInfo: IUserInfo |
 
     //当确认有matic时才执行下面这段代码
     if (!(userInfo.generateProxyWallet)) {
-        let pendingMessage = ctx.reply('generate proxy wallet for trading...');
+        let pendingMessage1 = await ctx.reply('generate proxy wallet for trading...');
         let result: boolean = await createProxyWallet(ctx, userInfo._id, userInfo.userAddress, userInfo.userPrivatekey);
         if (result) {
-            ctx.deleteMessage((await pendingMessage).message_id);
+            try {
+                await ctx.deleteMessage(pendingMessage1.message_id);
+            }catch(error) {
+                console.log('delete message failed 1')
+            }
         }
     }
     if (!(userInfo.approved)) {
-        let pendingMessage = ctx.reply('Approving token for trading...');
+        let pendingMessage2 = await ctx.reply('Approving token for trading...');
         let result: boolean = await approveTokensForTrading(ctx, userInfo._id, userInfo.userPrivatekey, userInfo.proxyWallet);
         if (result) {
-            ctx.deleteMessage((await pendingMessage).message_id);
+            try {
+                await ctx.deleteMessage(pendingMessage2.message_id);
+            } catch(error) {
+                console.log('delete message failed 2');
+            }
         }
     }
 }
