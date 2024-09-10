@@ -1,14 +1,24 @@
 import mongoose, { Mongoose } from 'mongoose';
 import UserInfo, { IUserInfo } from '../schema/UserInfo';
 import { decryptUserPrivateKey } from './decrypt';
+import 'dotenv/config';
 
 // 声明一个变量来存储 Mongoose 实例
 let DBInstance: Mongoose | null = null;
 
-const remoteUrl = 'mongodb://localhost:27017/polymarket_bot'; // 你可以在这里替换为实际的数据库URL
-const options = {
+const CAPath = process.env.CA;
+
+const remoteUrl = process.env.REMOTE_URL as string; // 你可以在这里替换为实际的数据库URL
+let options = {
     socketTimeoutMS: 4 * 1000,
 }; // 你的连接选项
+
+if (CAPath) {
+    options = Object.assign({}, options, {
+      tls: true,
+      tlsCAFile: CAPath,
+    });
+  }
 
 export const DBConnect = async (): Promise<Mongoose> => {
     try {
