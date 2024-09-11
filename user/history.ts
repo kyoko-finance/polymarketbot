@@ -23,6 +23,7 @@ async function queryHistoryShowMsg(ctx: Context) {
     if (!historyList || historyList.length == 0) {
         return historyHeader + "\nNo history data";
     }
+    console.log('历史数据长度是：', historyList.length);
     var showMsg: string = '';
     historyList.forEach((element, index) => {
         if (index == 0) {

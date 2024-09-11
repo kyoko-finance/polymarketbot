@@ -58,7 +58,7 @@ export async function withdraw(ctx: MyContext, withdrawAmount: string) {
 
     const balance = await provider.getBalance(userInfo.userAddress);
     if (balance.lt(1e6)) {
-        ctx.reply('You have too few matic.')
+        ctx.reply('You have too few $POL.')
         return false;
     }
 

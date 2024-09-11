@@ -7,6 +7,7 @@ import { queryUserInfo } from "../utils/db";
 import { formatString } from "../utils/utils";
 import { IEvent } from "../event/eventList";
 import { MyContext } from '../index';
+import { assert } from "console";
 
 
 
@@ -26,23 +27,18 @@ async function queryPositionsShowMsg(ctx: MyContext) {
         return positionsHeader + "\nNo positions data";
     }
 
-    let positionEventList = await queryEventList(positionList);
-    if (!positionEventList || positionEventList.length != positionList.length) {
+    //positionEventMap
+    let { positionEventList, positionEventMap } = await queryEventList(positionList);
+    if (!positionEventList || !positionEventMap) {
         console.log('查询position列表的event列表异常');
         return;
     }
-    //sort positionEventList,将请求的eventList按照positionList的索引排序后保存
-    positionEventList.sort((a, b) => {
-        const indexA = positionList!.findIndex(pos => pos.eventSlug === a.slug);
-        const indexB = positionList!.findIndex(pos => pos.eventSlug === b.slug);
-        return indexA - indexB;
-    });
     ctx.session!.selectedEventList = positionEventList;
 
     var showMsg: string = '';
     positionList.forEach((element, index) => {
         //ed表示event detail
-        var tradeUrl = `https://t.me/polymarket_kbot?start=ed-${positionEventList[index].id}`
+        var tradeUrl = `${process.env.BOT_URL}?start=ed-${positionEventMap.get(element.eventSlug)?.id}`
         if (index == 0) {
             showMsg += positionsHeader;
         }
@@ -62,14 +58,19 @@ async function queryPositionsShowMsg(ctx: MyContext) {
 
 async function queryEventList(positionList: IPosition[]) {
     //https://gamma-api.polymarket.com/events?slug=presidential-election-winner-2024&slug=which-party-wins-presidency-popular-vote
-    let url = `https://gamma-api.polymarket.com/events?`;
+    let url = `${process.env.GAMMA_API_BASE_URL}/events?`;
     let params = positionList.map(element => `slug=${element.eventSlug}`).join('&');
     url += params;
     console.log('url是：', url);
     var resp = await axios.get(url);
-    var eventList: IEvent[] = resp.data;
-    console.log('事件列表:', eventList.length);
-    return eventList;
+    var positionEventList: IEvent[] = resp.data;
+    console.log('事件列表:', positionEventList.length);
+    assert(positionEventList && positionEventList.length > 0);
+    let positionEventMap = positionEventList.reduce((map, item) => {
+        map.set(item.slug, item);
+        return map;
+    }, new Map<string, IEvent>());
+    return { positionEventList, positionEventMap };
 }
 
 

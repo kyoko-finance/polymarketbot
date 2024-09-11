@@ -5,6 +5,7 @@ import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegr
 import { formatString, formatVolume, sortMarket } from "../utils/utils";
 import { IEvent, IMarket } from "./eventList";
 import { MyContext } from "../index";
+import 'dotenv/config';
 
 
 
@@ -70,7 +71,7 @@ function getOperationUrl(event: IEvent, market: IMarket) {
     if(!market) {
         return;
     }
-    let url = `https://t.me/polymarket_kbot?start=edo-${event.id + '_' + market.id}`
+    let url = `${process.env.BOT_URL}?start=edo-${event.id + '_' + market.id}`
     return url;
 }
 

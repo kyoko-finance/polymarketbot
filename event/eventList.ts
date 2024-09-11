@@ -5,6 +5,7 @@ import { ExtraEditMessageText } from "telegraf/typings/telegram-types";
 import { formatString, formatVolume, sortMarket } from "../utils/utils";
 import axios from "axios";
 import { MyContext } from "../index";
+import 'dotenv/config';
 
 
 
@@ -59,7 +60,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         let element = eventList[i];
 
         //ed表示event detail
-        var cancelOrderUrl = `https://t.me/polymarket_kbot?start=ed-${element.id}`
+        var cancelOrderUrl = `${process.env.BOT_URL}?start=ed-${element.id}`
 
         eventMessage += `\n• Title: *${formatString(element.title)} 📈*\n`
         let currentMarketList: IMarket[] = element.markets;
@@ -106,7 +107,7 @@ async function getEventApi(categorySlug: string, topicSlug: string) {
 }
 
 function getEventUrl(categorySlug: string, topicSlug: string) {
-    let baseUrl = 'https://gamma-api.polymarket.com/events?limit=10&active=true&archived=false&closed=false&ascending=false&offset=0&';
+    let baseUrl = `${process.env.GAMMA_API_BASE_URL}/events?limit=10&active=true&archived=false&closed=false&ascending=false&offset=0&`;
     let url = `${baseUrl}tag_slug=${topicSlug}&order=volume24hr`;
     if (categorySlug === 'all') {
         if (topicSlug === 'top') {

@@ -1,10 +1,10 @@
 import { Context, Telegraf, Markup } from "telegraf";
 import { ExtraReplyMessage, ExtraEditMessageText } from "telegraf/typings/telegram-types";
-import 'dotenv/config';
 import { initClobClientGnosis } from "../init/clobclientInit";
 import { formatExpiration, formatString, orderTypeLogo } from "../utils/utils";
 import { OPEN_ORDERS_REFRESH, BACK_TO_INDEX } from "../utils/constant";
 import axios from "axios";
+import 'dotenv/config';
 
 var openOrderMap: Map<string, IOpenOrder[]> = new Map();
 
@@ -56,7 +56,7 @@ async function getShowMsg(ctx: Context, openOrderList: IOpenOrder[] | null) {
 
         var market: IMarket[] = await getMarketApi(element.market);
 
-        var cancelOrderUrl = `https://t.me/polymarket_kbot?start=co-${element.id.substring(2).slice(0, -5)}`
+        var cancelOrderUrl = `${process.env.BOT_URL}?start=co-${element.id.substring(2).slice(0, -5)}`
         console.log('cancelOrderUrl:', cancelOrderUrl);
 
         showMsg += `\n• Market: [${formatString(market[0].question)}](https://polymarket.com/event/${market[0].event_slug}/${market[0].market_slug}) 📈`

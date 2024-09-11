@@ -203,7 +203,7 @@ export function orderTypeLogo(type: string) {
     }
     if (type == "BUY") {
         return '🟢BUY';
-    } else if(type == '') {
+    } else if(type == 'SELL') {
         return '🔴SELL';
     }
     return type;
