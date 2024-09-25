@@ -97,7 +97,7 @@ async function firstTimeInitUserPolymarketAccount(randomWallet: any, ctx: Contex
 async function showWelcomeMessageOnce(bot: Telegraf, ctx: Context, telegramUserInfo: User) {
     //generate new private key
     var randomWallet = generateRandomPrivateKey();
-    console.log(randomWallet);
+    // console.log(randomWallet);
 
     const buttons = [
         Markup.button.callback('× Dismiss Message', WELCOME_DISMISS_GENERATE_WALLET)

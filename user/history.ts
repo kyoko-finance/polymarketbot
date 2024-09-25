@@ -56,7 +56,7 @@ async function getHistoryApi(proxyWallet: string) {
     // 获取当前时间加1天
     const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     const endTime = Math.floor(tomorrow.getTime() / 1000);
-    var url = `https://data-api.polymarket.com/activity?user=${proxyWallet}&limit=20&offset=0&start=1601481600&end=${endTime}&sortBy=TIMESTAMP&sortDirection=DESC`;
+    var url = `https://data-api.polymarket.com/activity?user=${proxyWallet}&limit=10&offset=0&start=1601481600&end=${endTime}&sortBy=TIMESTAMP&sortDirection=DESC`;
     // console.log("history url:", url);
     const historyResp = await axios.get(url);
     // console.log('getHistoryApi:', historyResp.data);
