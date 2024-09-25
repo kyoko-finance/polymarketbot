@@ -82,7 +82,7 @@ function getEventShowMsg(ctx: MyContext, eventList: IEvent[], categoryLabel: str
         eventMessage += `• Bet: ${volumeStr}`;
         eventMessage += `\n• volume24hr: ${volume24hrStr}`
         eventMessage += `\n• commentCount: ${element.commentCount}`
-        eventMessage += `\n• Operation: [\\[Operation\\]](${cancelOrderUrl})`
+        eventMessage += `\n• Operation: [🤑Bet](${cancelOrderUrl})`
         if (i !== eventList.length - 1) {
             eventMessage += `\n\n──────────────────────`;
         }

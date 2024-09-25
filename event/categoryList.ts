@@ -65,10 +65,35 @@ async function getCategoryApi(ctx: MyContext) {
     }
 }
 
-
+function handleCategory(categoryList: ICategory[]) {
+    if(!categoryList || categoryList.length == 0) {
+        return;
+    }
+    for(let i = 0;i < categoryList.length; i++) {
+        let category = categoryList[i];
+        if(category.label.toLowerCase().includes('all')) {
+            category.label = '😀' + category.label;
+        } else if(category.label.toLowerCase().includes('new')) {
+            category.label = '🆕' + category.label;
+        } else if(category.label.toLowerCase().includes('politics')) {
+            category.label = '🇺🇲' + category.label;
+        } else if(category.label.toLowerCase().includes('crypto')) {
+            category.label = 'Ξ' + category.label;
+        } else if(category.label.toLowerCase().includes('sports')) {
+            category.label = '⛹️' + category.label;
+        } else if(category.label.toLowerCase().includes('pop culture')) {
+            category.label = '🎤' + category.label;
+        } else if(category.label.toLowerCase().includes('business')) {
+            category.label = '🤝' + category.label;
+        } else if(category.label.toLowerCase().includes('science')) {
+            category.label = '🔬' + category.label;
+        }
+    }
+}
 
 
 function getCategoryMenu(categoryList: ICategory[]): InlineKeyboardButton[][] {
+    handleCategory(categoryList);
     const result: InlineKeyboardButton[][] = [];
     for (let i = 0; i < categoryList.length; i += 3) {
         let chunk = categoryList.slice(i, i + 3);

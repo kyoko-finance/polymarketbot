@@ -50,7 +50,7 @@ async function queryPositionsShowMsg(ctx: MyContext) {
         showMsg += `\n• Bet: $${formatString(element.initialValue.toFixed(2).toString())}`
         showMsg += `\n• Current: $${formatString(element.currentValue.toFixed(2).toString())}\\(${formatString(element.percentPnl.toFixed(2))}%\\)`
         showMsg += `\n• To win: $${formatString(element.size.toFixed(2).toString())}`
-        showMsg += `\n• Operation: [*[Trade]*](${tradeUrl})`;
+        showMsg += `\n• Operation: [🤝Trade]](${tradeUrl})`;
         showMsg += `\n`;
     });
     return showMsg;

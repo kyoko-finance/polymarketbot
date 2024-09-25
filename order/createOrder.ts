@@ -244,6 +244,7 @@ export async function createOrder(ctx: MyContext, marketOrLimit: string, amount:
         //市价单&buy
         let resp = await createBuyMarketOrder(ctx, tokenId, amount);
         if (!resp || !resp.success) {
+            console.log('resp:', resp);
             ctx.reply('Create order failed2.');
             return;
         }
@@ -361,7 +362,7 @@ async function createBuyMarketOrder(ctx: Context, tokenID: string, amount: numbe
         console.log('createBuyMarketOrder:', resp);
         return resp;
     } catch (error) {
-        console.log('createBuyMarketOrder failed');
+        console.log('createBuyMarketOrder failed:', error);
         return null;
     }
 }

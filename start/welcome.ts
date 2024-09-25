@@ -34,9 +34,22 @@ export function welcome(bot: Telegraf) {
             var randomWallet = await showWelcomeMessageOnce(bot, ctx, telegramUserInfo);
             ctx.reply('Please wait while initializing user information...');
             await firstTimeInitUserPolymarketAccount(randomWallet, ctx, telegramUserInfo);
+            //首次接入机器人提示用户充值和交易步骤
+            await firstTimeUserGuide(ctx);
         }
         showIndex(ctx, userInfo);
     })
+}
+
+async function firstTimeUserGuide(ctx: Context) {
+    let showContent =
+        `
+        *😻New User Guide*
+      \n1\\. You need to top up some $POL to complete actions like creating proxyWallet and Approving\\.
+      \n2\\. You need to deposit some $USDC into proxyWallet in order to place a bet\\.
+      \n3\\. You can navigate to the Profile page for more information\\.
+      `;
+    ctx.replyWithMarkdownV2(showContent);
 }
 
 function handlePayload(ctx: Context, payload: string) {

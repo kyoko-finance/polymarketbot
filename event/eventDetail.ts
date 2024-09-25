@@ -55,11 +55,11 @@ export function showEventDetail(ctx: MyContext, id: string) {
         for (let j = 0; j < maxLength; j++) {//只需要列出前3个
             let market = currentMarketList[j];
             let url = getOperationUrl(event, market);
-            eventDetailMsg += `*${(j + 1) + '\\. ' + formatString(market.groupItemTitle)}*    ${Math.round(market.bestAsk * 100)}%      [\\[Yes\\]](${url + '_0'})       [\\[No\\]](${url + '_1'})\n\n`;
+            eventDetailMsg += `*${(j + 1) + '\\. ' + formatString(market.groupItemTitle)}*    ${Math.round(market.bestAsk * 100)}%      [✅Yes](${url + '_0'})       [❌No](${url + '_1'})\n\n`;
         }
     } else {
         let url = getOperationUrl(event, currentMarketList[0]);
-        eventDetailMsg += `[\\[Yes\\]](${url+'_0'})      [\\[No\\]](${url+'_1'})`;
+        eventDetailMsg += `[✅Yes](${url+'_0'})      [❌No](${url+'_1'})`;
     }
     eventDetailMsg += `\n`;
 

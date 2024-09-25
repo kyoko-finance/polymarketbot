@@ -62,7 +62,7 @@ async function getShowMsg(ctx: Context, openOrderList: IOpenOrder[] | null) {
         showMsg += `\n• Market: [${formatString(market[0].question)}](https://polymarket.com/event/${market[0].event_slug}/${market[0].market_slug}) 📈`
         showMsg += `\n• Side: ${orderTypeLogo(element.side)}`;
         showMsg += `\n• Outcome: ${element.outcome}`
-        showMsg += `\n• Operation: [\\[Cancel\\]](${cancelOrderUrl})`
+        showMsg += `\n• Operation: [✖️Cancel](${cancelOrderUrl})`
         showMsg += `\n• Price: ${formatString(Math.round(parseFloat(element.price) * 100).toString())}¢`
         showMsg += `\n• Filled: ${formatString(element.size_matched)} / ${formatString(element.original_size)}`
         showMsg += `\n• Total: $${formatString(total.toString())}`

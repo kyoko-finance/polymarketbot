@@ -38,7 +38,10 @@ portfolio:$${formatString(portfolio.toString())}
 
 USDC address: \`0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174\`
 
-*Tips:* Send/withdraw USDC to the proxy wallet address and select Polygon\\.
+*Tips:* 
+1\\. After starting to use the bot, you need to top up some $POL to complete actions like creating proxyWallet and Approving\\.
+2\\. Send $USDC to the proxyWallet address and select Polygon\\.
+3\\. Read the [Docs](${process.env.DOCS}) for more information\\.
     `;
     return profileMsg;
 }
