@@ -9,16 +9,17 @@ let DBInstance: Mongoose | null = null;
 const CAPath = process.env.CA;
 
 const remoteUrl = process.env.REMOTE_URL as string; // 你可以在这里替换为实际的数据库URL
+console.log("mongoose remoteUrl:", remoteUrl);
 let options = {
     socketTimeoutMS: 4 * 1000,
 }; // 你的连接选项
 
 if (CAPath) {
     options = Object.assign({}, options, {
-      tls: true,
-      tlsCAFile: CAPath,
+        tls: true,
+        tlsCAFile: CAPath,
     });
-  }
+}
 
 export const DBConnect = async (): Promise<Mongoose> => {
     try {

@@ -75,6 +75,8 @@ function handleCategory(categoryList: ICategory[]) {
             category.label = '😀' + category.label;
         } else if(category.label.toLowerCase().includes('new')) {
             category.label = '🆕' + category.label;
+        } else if(category.label.toLowerCase().includes('geopolitics')) {
+            category.label = '⚔️' + category.label;
         } else if(category.label.toLowerCase().includes('politics')) {
             category.label = '🇺🇲' + category.label;
         } else if(category.label.toLowerCase().includes('crypto')) {
@@ -87,6 +89,22 @@ function handleCategory(categoryList: ICategory[]) {
             category.label = '🤝' + category.label;
         } else if(category.label.toLowerCase().includes('science')) {
             category.label = '🔬' + category.label;
+        } else if(category.label.toLowerCase().includes('earnings')) {
+            category.label = '💸' + category.label;
+        } else if(category.label.toLowerCase().includes('tech')) {
+            category.label = '💻' + category.label;
+        } else if(category.label.toLowerCase().includes('culture')) {
+            category.label = '🎤' + category.label;
+        } else if(category.label.toLowerCase().includes('world')) {
+            category.label = '🌐' + category.label;
+        } else if(category.label.toLowerCase().includes('economy')) {
+            category.label = '💰' + category.label;
+        } else if(category.label.toLowerCase().includes('trump')) {
+            category.label = '💇' + category.label;
+        } else if(category.label.toLowerCase().includes('elections')) {
+            category.label = '🗳️' + category.label;
+        } else if(category.label.toLowerCase().includes('mentions')) {
+            category.label = '💬' + category.label;
         }
     }
 }
